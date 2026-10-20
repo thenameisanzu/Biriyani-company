@@ -27,22 +27,21 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
   const heroOverlayRef = useRef<HTMLDivElement>(null);
   const blurVeilRef = useRef<HTMLDivElement>(null);
   const scrollHintRef = useRef<HTMLDivElement>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
   const floatingBtnRef = useRef<HTMLDivElement>(null);
 
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-  const [videoProgress, setVideoProgress] = useState(0);
 
-  // Time update: handle video progress bar
-  const handleTimeUpdate = () => {
-    if (!videoRef.current) return;
-    const { currentTime, duration } = videoRef.current;
-    if (duration > 0) {
-      setVideoProgress((currentTime / duration) * 100);
+  // Loaded metadata handler
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      videoRef.current.pause(); // Controlled by scroll
+      videoRef.current.currentTime = 0;
     }
   };
 
-  // Toggle Play/Pause
+  // Toggle Manual Play/Pause override if user wants continuous autoplay
   const togglePlay = () => {
     if (!videoRef.current) return;
     if (videoRef.current.paused) {
@@ -62,16 +61,18 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
     const nextMuted = !isMuted;
     videoRef.current.muted = nextMuted;
     setIsMuted(nextMuted);
-    if (!nextMuted && videoRef.current.paused) {
-      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
-    }
   };
 
   // Replay Video from start
   const restartVideo = () => {
     if (!videoRef.current) return;
     videoRef.current.currentTime = 0;
-    videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+    if (containerRef.current) {
+      window.scrollTo({
+        top: containerRef.current.offsetTop + 10,
+        behavior: "smooth",
+      });
+    }
   };
 
   // Smooth scroll jumps
@@ -84,56 +85,24 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
 
   const scrollToVideo = () => {
     if (containerRef.current) {
-      const targetTop = containerRef.current.offsetTop;
       window.scrollTo({
-        top: targetTop,
+        top: containerRef.current.offsetTop + window.innerHeight * 0.4,
         behavior: "smooth",
       });
     }
   };
 
-  // 1. Intersection Observer for Auto-play when section enters view
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            video
-              .play()
-              .then(() => setIsPlaying(true))
-              .catch(() => {
-                video.muted = true;
-                setIsMuted(true);
-                video.play().then(() => setIsPlaying(true)).catch(() => {});
-              });
-          } else {
-            video.pause();
-            setIsPlaying(false);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    observer.observe(video);
-    return () => observer.disconnect();
-  }, []);
-
-  // 2. High-performance scroll tracking: 100% direct DOM manipulation via requestAnimationFrame
-  // ZERO React re-renders on scroll! Guarantees 120 FPS buttery smooth scrolling.
-  // 1. Video Expands on entrance.
-  // 2. Video stays crisp & unblurred during runway ("adyam video sherikk kanan patanam").
-  // 3. Scrolling further smoothly blurs video ("veendum scroll cheyumbol venam blur aakan").
-  // 4. Liquid Glass Menu scrolls directly over blurred video ("blurred aayit venam menu ellam athilekk varan").
-  // 5. Menu cards stack on scroll ("veendum scroll cheyyumbol ath stack aavanam").
+  // 1. SCROLL-DRIVEN VIDEO PLAYBACK & BLUR ENGINE (100% DIRECT DOM - 120 FPS)
+  // Flow requested:
+  // 1. "scroll cheyyunnathinu anusarich video play aakanam" (Video plays in sync with scroll)
+  // 2. "ennit video end aakumbol blur aakanam" (When video reaches end, it blurs)
+  // 3. "ennit veendum scroll cheyyumbol aa menu items aa blur aayi nikkunna videoyude mukalail glassmorphic aayit varanam" (Menu enters on top of blurred video)
+  // 4. "veendum scroll cheyyumbol ath stack aavanam" (Cards stack as user scrolls through menu)
   useEffect(() => {
     let ticking = false;
 
     const updateFrame = () => {
-      if (!containerRef.current || !videoWrapperRef.current) {
+      if (!containerRef.current || !videoWrapperRef.current || !videoRef.current) {
         ticking = false;
         return;
       }
@@ -141,12 +110,11 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
       const rect = containerRef.current.getBoundingClientRect();
       const windowH = window.innerHeight;
 
-      // Expansion calculation:
+      // Stage 1: Expanding Card from 50% square to 100% full screen
       const enterDistance = windowH - rect.top;
       const enterThreshold = windowH * 0.75;
       const rawExpand = Math.min(Math.max(enterDistance / enterThreshold, 0), 1);
 
-      // Responsive initial card sizing: 86vw on phone, 68vw on iPad, 50vw on desktop
       const screenW = window.innerWidth;
       const initialSize =
         screenW < 768
@@ -155,68 +123,118 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
           ? "min(68vw, 460px)"
           : "min(50vw, 520px)";
 
-      // Direct DOM update on video wrapper
-      const el = videoWrapperRef.current;
+      const wrapper = videoWrapperRef.current;
       if (rawExpand >= 0.98) {
-        el.style.width = "100%";
-        el.style.height = "100vh";
-        el.style.borderRadius = "0px";
-        el.style.boxShadow = "none";
+        wrapper.style.width = "100%";
+        wrapper.style.height = "100vh";
+        wrapper.style.borderRadius = "0px";
+        wrapper.style.boxShadow = "none";
       } else {
-        el.style.width = `calc(${initialSize} + (100vw - ${initialSize}) * ${rawExpand})`;
-        el.style.height = `calc(${initialSize} + (100vh - ${initialSize}) * ${rawExpand})`;
-        el.style.borderRadius = `${(1 - rawExpand) * 44}px`;
-        el.style.boxShadow =
+        wrapper.style.width = `calc(${initialSize} + (100vw - ${initialSize}) * ${rawExpand})`;
+        wrapper.style.height = `calc(${initialSize} + (100vh - ${initialSize}) * ${rawExpand})`;
+        wrapper.style.borderRadius = `${(1 - rawExpand) * 44}px`;
+        wrapper.style.boxShadow =
           "0 30px 80px rgba(0, 0, 0, 0.18), 0 10px 35px rgba(255, 85, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)";
       }
 
-      // Scroll Runway and Blur calculation:
-      // When rect.top <= 0, user is scrolling inside the cinematic experience section
+      // Stage 2: Video Playback According To Scroll
+      // When rect.top <= 0, the section is pinned at the top of the viewport
       const scrolledPast = -rect.top;
-      const blurStart = windowH * 0.55; // First ~55vh is crisp HD video watching!
-      const blurEnd = windowH * 1.15;   // Blur transitions smoothly as menu arrives
+      const playbackDistance = windowH * 1.6; // Scroll distance dedicated to scrubbing the video
+      const blurDistance = windowH * 0.55;    // Scroll distance dedicated to blurring the video
 
-      let blurProgress = 0;
-      if (scrolledPast > blurStart) {
-        blurProgress = Math.min(Math.max((scrolledPast - blurStart) / (blurEnd - blurStart), 0), 1);
-      }
+      const video = videoRef.current;
+      const duration = video.duration || 8;
 
-      // Direct DOM filter update on video element
-      if (videoRef.current) {
-        const blurPx = blurProgress * 22;
-        const brightness = 1 - blurProgress * 0.22;
-        const saturate = 135 + blurProgress * 20;
-        const scale = 1.02 + blurProgress * 0.06;
-        videoRef.current.style.filter = `blur(${blurPx.toFixed(1)}px) brightness(${brightness.toFixed(2)}) saturate(${saturate.toFixed(0)}%)`;
-        videoRef.current.style.transform = `scale(${scale.toFixed(3)})`;
-      }
-
-      // Ambient blur veil
-      if (blurVeilRef.current) {
-        blurVeilRef.current.style.opacity = blurProgress.toFixed(2);
-      }
-
-      // Hero overlay (Process Pill, Sound Toggle, Editorial Title)
-      if (heroOverlayRef.current) {
-        const overlayOpacity = Math.max(1 - blurProgress * 1.6, 0);
-        heroOverlayRef.current.style.opacity = overlayOpacity.toFixed(2);
-        heroOverlayRef.current.style.transform = `translateY(${(-blurProgress * 40).toFixed(1)}px)`;
-        heroOverlayRef.current.style.pointerEvents = overlayOpacity < 0.15 ? "none" : "auto";
-      }
-
-      // Scroll hint pill
-      if (scrollHintRef.current) {
-        const hintOpacity = Math.max(1 - blurProgress * 2.2, 0);
-        scrollHintRef.current.style.opacity = hintOpacity.toFixed(2);
-      }
-
-      // Floating switcher button (show when menu is in view)
-      if (floatingBtnRef.current) {
-        if (blurProgress >= 0.75) {
-          floatingBtnRef.current.style.display = "flex";
-        } else {
-          floatingBtnRef.current.style.display = "none";
+      if (scrolledPast <= 0) {
+        // Entering from above
+        if (video.currentTime > 0.05) {
+          video.currentTime = 0;
         }
+        video.style.filter = "blur(0px) brightness(1) saturate(135%)";
+        video.style.transform = "scale(1.02)";
+        if (blurVeilRef.current) blurVeilRef.current.style.opacity = "0";
+        if (heroOverlayRef.current) {
+          heroOverlayRef.current.style.opacity = "1";
+          heroOverlayRef.current.style.transform = "translateY(0px)";
+          heroOverlayRef.current.style.pointerEvents = "auto";
+        }
+        if (progressBarRef.current) progressBarRef.current.style.width = "0%";
+        if (floatingBtnRef.current) floatingBtnRef.current.style.display = "none";
+      } else if (scrolledPast <= playbackDistance) {
+        // ============================================================
+        // 1. VIDEO PLAYS IN SYNC WITH SCROLL! (100% Crisp, NO blur)
+        // ============================================================
+        const videoRatio = scrolledPast / playbackDistance;
+        const targetTime = Math.min(Math.max(videoRatio * duration, 0), duration);
+
+        // Update video currentTime if difference is significant
+        if (Math.abs(video.currentTime - targetTime) > 0.03) {
+          video.currentTime = targetTime;
+        }
+
+        // Crisp 0px blur
+        video.style.filter = "blur(0px) brightness(1) saturate(135%)";
+        video.style.transform = "scale(1.02)";
+
+        if (blurVeilRef.current) blurVeilRef.current.style.opacity = "0";
+        if (heroOverlayRef.current) {
+          heroOverlayRef.current.style.opacity = "1";
+          heroOverlayRef.current.style.transform = "translateY(0px)";
+          heroOverlayRef.current.style.pointerEvents = "auto";
+        }
+        if (progressBarRef.current) {
+          progressBarRef.current.style.width = `${(videoRatio * 100).toFixed(1)}%`;
+        }
+        if (scrollHintRef.current) scrollHintRef.current.style.opacity = "1";
+        if (floatingBtnRef.current) floatingBtnRef.current.style.display = "none";
+      } else if (scrolledPast <= playbackDistance + blurDistance) {
+        // ============================================================
+        // 2. VIDEO END REACHED -> PROGRESSIVELY BLURS!
+        // ============================================================
+        if (Math.abs(video.currentTime - duration) > 0.05) {
+          video.currentTime = duration;
+        }
+
+        const blurRatio = (scrolledPast - playbackDistance) / blurDistance;
+        const blurPx = blurRatio * 24;
+        const brightness = 1 - blurRatio * 0.22;
+        const saturate = 135 + blurRatio * 20;
+        const scale = 1.02 + blurRatio * 0.06;
+
+        video.style.filter = `blur(${blurPx.toFixed(1)}px) brightness(${brightness.toFixed(2)}) saturate(${saturate.toFixed(0)}%)`;
+        video.style.transform = `scale(${scale.toFixed(3)})`;
+
+        if (blurVeilRef.current) {
+          blurVeilRef.current.style.opacity = blurRatio.toFixed(2);
+        }
+        if (heroOverlayRef.current) {
+          const overlayOpacity = Math.max(1 - blurRatio * 1.6, 0);
+          heroOverlayRef.current.style.opacity = overlayOpacity.toFixed(2);
+          heroOverlayRef.current.style.transform = `translateY(${(-blurRatio * 40).toFixed(1)}px)`;
+          heroOverlayRef.current.style.pointerEvents = overlayOpacity < 0.15 ? "none" : "auto";
+        }
+        if (progressBarRef.current) progressBarRef.current.style.width = "100%";
+        if (scrollHintRef.current) {
+          scrollHintRef.current.style.opacity = Math.max(1 - blurRatio * 2.2, 0).toFixed(2);
+        }
+        if (floatingBtnRef.current) {
+          floatingBtnRef.current.style.display = blurRatio >= 0.7 ? "flex" : "none";
+        }
+      } else {
+        // ============================================================
+        // 3. MENU SECTION FULLY ACTIVE OVER BLURRED VIDEO
+        // ============================================================
+        video.style.filter = "blur(24px) brightness(0.78) saturate(155%)";
+        video.style.transform = "scale(1.08)";
+        if (blurVeilRef.current) blurVeilRef.current.style.opacity = "1";
+        if (heroOverlayRef.current) {
+          heroOverlayRef.current.style.opacity = "0";
+          heroOverlayRef.current.style.pointerEvents = "none";
+        }
+        if (progressBarRef.current) progressBarRef.current.style.width = "100%";
+        if (scrollHintRef.current) scrollHintRef.current.style.opacity = "0";
+        if (floatingBtnRef.current) floatingBtnRef.current.style.display = "flex";
       }
 
       ticking = false;
@@ -280,15 +298,14 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
             transform: "translateZ(0)",
           }}
         >
-          {/* Slow-Motion Video Element */}
+          {/* Slow-Motion Video Element (Scrubbed in sync with scroll) */}
           <video
             ref={videoRef}
             src="/video/Create_slow_motion_motion_video_20261020132803.mp4"
             playsInline
-            loop
             muted={isMuted}
-            autoPlay
-            onTimeUpdate={handleTimeUpdate}
+            preload="auto"
+            onLoadedMetadata={handleLoadedMetadata}
             style={{
               position: "absolute",
               top: 0,
@@ -313,7 +330,7 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
             }}
           />
 
-          {/* Frosted Glass Subtle Amber Ambient Veil (Dynamic opacity on scroll) */}
+          {/* Frosted Glass Amber Ambient Veil (Dynamic opacity on scroll) */}
           <div
             ref={blurVeilRef}
             style={{
@@ -330,7 +347,7 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
 
           {/* ============================================================ */}
           {/* CRISP FULLSCREEN VIDEO HERO OVERLAYS (STAGE 1)                */}
-          {/* Fades out smoothly as user scrolls towards the menu          */}
+          {/* Shows live progress as user scrubs video, fades out on blur  */}
           {/* ============================================================ */}
           <div
             ref={heroOverlayRef}
@@ -394,7 +411,7 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
                     textTransform: "uppercase",
                   }}
                 >
-                  SLOW-MOTION DUM • HARDWOOD COAL
+                  SCROLL-TRIGGERED 4K DUM • HARDWOOD COAL
                 </span>
               </div>
 
@@ -472,7 +489,7 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
                   )}
                 </button>
 
-                {/* Play/Pause */}
+                {/* Optional Play/Pause override */}
                 <button
                   onClick={togglePlay}
                   aria-label={isPlaying ? "Pause video" : "Play video"}
@@ -565,11 +582,11 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
                   textShadow: "0 4px 16px rgba(0, 0, 0, 0.6)",
                 }}
               >
-                Layered basmati infused with Kashmiri saffron &amp; slow-braised cuts over glowing coal embers in Kanjikuzhi.
+                Scroll down to witness the layered basmati &amp; slow coal embers. Video advances with your scroll!
               </p>
             </div>
 
-            {/* Bottom Bar: Progress & Direct Scroll to Menu Button */}
+            {/* Bottom Bar: Live Scroll Scrub Progress & Jump to Menu Button */}
             <div
               className="cinema-bottom-bar"
               style={{
@@ -594,12 +611,13 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
                   }}
                 >
                   <div
+                    ref={progressBarRef}
                     style={{
                       height: "100%",
-                      width: `${videoProgress}%`,
+                      width: "0%",
                       background: "linear-gradient(90deg, #FF7517, #FF5500)",
                       borderRadius: "4px",
-                      transition: "width 0.1s linear",
+                      transition: "width 0.05s linear",
                     }}
                   />
                 </div>
@@ -612,7 +630,7 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
                     letterSpacing: "0.1em",
                   }}
                 >
-                  4K SLOW-MO
+                  SCROLL TO PLAY
                 </span>
               </div>
 
@@ -655,27 +673,26 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
 
       {/* ============================================================ */}
       {/* 2. SCROLLABLE TRACK (Runway + Menu) OVER STICKY VIDEO        */}
-      {/* "adyam video sherikk kanan patanam -> veendum scroll cheyumbol*/}
-      {/* blur aakan -> menu varan -> cards stack aavanam"              */}
+      {/* Provides the exact scroll runway to play video, blur it,     */}
+      {/* and reveal stacking liquid glass cards!                      */}
       {/* ============================================================ */}
       <div
         style={{
           position: "relative",
           zIndex: 10,
-          marginTop: "-100vh", // Aligns top of runway with top of sticky video
+          marginTop: "-100vh", // Aligns runway top with top of sticky video
         }}
       >
-        {/* 2A. Pure Video Watching Runway */}
-        {/* User scrolls through this distance watching the crystal clear HD video! */}
+        {/* 2A. Scroll Playback Runway: As user scrolls here, video plays! */}
         <div
           className="video-scroll-runway"
           style={{
-            height: "100vh",
+            height: "215vh", // Generous runway for scroll-scrubbing video playback
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-end",
             alignItems: "center",
-            paddingBottom: "32px",
+            paddingBottom: "40px",
             pointerEvents: "none",
           }}
         >
@@ -703,19 +720,19 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
             }}
           >
             <ChevronDown size={14} color="#FF7517" />
-            <span>SCROLL DOWN FOR MENU</span>
+            <span>KEEP SCROLLING FOR LIQUID GLASS MENU</span>
             <ChevronDown size={14} color="#FF7517" />
           </div>
         </div>
 
-        {/* 2B. Menu Section directly on top of the blurred video */}
+        {/* 2B. Menu Section directly on top of blurred video */}
         <div id="menu-overlay-wrapper">
           <MenuSection onAddToTray={onAddToTray} />
         </div>
       </div>
 
       {/* ============================================================ */}
-      {/* 3. FLOATING BUTTON: Jump back to Full Video anytime           */}
+      {/* 3. FLOATING BUTTON: Jump back to Video Scrub anytime          */}
       {/* ============================================================ */}
       <div
         ref={floatingBtnRef}
@@ -758,7 +775,7 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
           }}
         >
           <Eye size={15} color="#FF7517" />
-          <span>WATCH VIDEO FULLSCREEN ↑</span>
+          <span>REPLAY VIDEO SCRUB ↑</span>
         </button>
       </div>
 

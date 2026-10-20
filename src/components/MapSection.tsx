@@ -48,8 +48,17 @@ export default function MapSection() {
             <span>Store Location</span>
           </div>
 
-          <h2
+          <motion.h2
             className="huge-section-title"
+            initial={{ opacity: 0, scale: 0.82, y: 45, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: false, amount: 0.3 }}
+            transition={{
+              type: "spring",
+              stiffness: 280,
+              damping: 20,
+              mass: 0.8,
+            }}
             style={{
               color: "#2C2727",
               marginBottom: "16px",
@@ -57,7 +66,7 @@ export default function MapSection() {
           >
             VISIT OUR COUNTER <br />
             <span style={{ color: "#FF5500" }}>KANJIKUZHI, KOTTAYAM</span>
-          </h2>
+          </motion.h2>
 
           <p style={{ fontSize: "1.15rem", color: "#3E3939", lineHeight: 1.65 }}>
             Pick up your piping hot black takeaway bucket directly from our kitchen counter or order for express home delivery.

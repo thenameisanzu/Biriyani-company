@@ -60,7 +60,16 @@ export default function DeliverySection() {
             >
               PRIORITY DOORSTEP DELIVERY • ESTD 2025
             </div>
-            <h2
+            <motion.h2
+              initial={{ opacity: 0, scale: 0.82, y: 45, filter: "blur(8px)" }}
+              whileInView={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{
+                type: "spring",
+                stiffness: 280,
+                damping: 20,
+                mass: 0.8,
+              }}
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "clamp(3rem, 6.5vw, 6rem)",
@@ -73,7 +82,7 @@ export default function DeliverySection() {
             >
               ORDER DIRECT. <br />
               <span style={{ color: "#FF5500" }}>SWIGGY &amp; ZOMATO.</span>
-            </h2>
+            </motion.h2>
           </div>
 
           <div>

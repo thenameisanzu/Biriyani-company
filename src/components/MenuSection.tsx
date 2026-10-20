@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { MenuItemType } from "./FoodDetailModal";
-import { Plus, Check, ArrowUpRight, Phone, ChevronDown, Sparkles } from "lucide-react";
+import { Plus, Check, ArrowUpRight, Phone, Sparkles } from "lucide-react";
 import { WhatsAppIcon } from "./QuickOrderDrawer";
 
 export interface PortionOption {
@@ -115,7 +115,6 @@ interface MenuSectionProps {
 
 export default function MenuSection({ onAddToTray }: MenuSectionProps) {
   const [activeCategory, setActiveCategory] = useState<string>("all");
-  const [expandedDishId, setExpandedDishId] = useState<string>("chicken-dum-biryani");
   const [selectedPortions, setSelectedPortions] = useState<{ [dishId: string]: number }>({
     "chicken-dum-biryani": 1,
     "buff-beef-biryani": 0,
@@ -133,15 +132,10 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
         );
 
   const handleSelectPortion = (dishId: string, portionIdx: number) => {
-    setExpandedDishId(dishId);
     setSelectedPortions((prev) => ({
       ...prev,
       [dishId]: portionIdx,
     }));
-  };
-
-  const handleToggleDish = (dishId: string) => {
-    setExpandedDishId((prev) => (prev === dishId ? "" : dishId));
   };
 
   const handleAdd = (dish: MenuItem, portion: PortionOption) => {
@@ -172,51 +166,28 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
     <section
       id="menu"
       style={{
-        padding: "100px 0 90px",
+        padding: "110px 0 100px",
         background: "#FFFFFF",
         color: "#2C2727",
         position: "relative",
-        overflow: "hidden",
       }}
     >
-      {/* Liquid Glass Background Refraction Orbs (Dynamic Ambience) */}
+      {/* Liquid Glass Background Ambient Glow Orbs */}
       <motion.div
         animate={{
-          scale: [1, 1.15, 1],
-          opacity: [0.35, 0.55, 0.35],
-          x: [0, 25, 0],
-        }}
-        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-        style={{
-          position: "absolute",
-          top: "15%",
-          right: "5%",
-          width: "550px",
-          height: "550px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(255, 85, 0, 0.12) 0%, rgba(255, 117, 23, 0.04) 50%, transparent 70%)",
-          filter: "blur(60px)",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      />
-
-      <motion.div
-        animate={{
-          scale: [1.1, 1, 1.1],
+          scale: [1, 1.2, 1],
           opacity: [0.25, 0.45, 0.25],
-          x: [0, -30, 0],
         }}
-        transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         style={{
           position: "absolute",
-          bottom: "10%",
-          left: "2%",
+          top: "10%",
+          right: "5%",
           width: "600px",
           height: "600px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(255, 140, 0, 0.1) 0%, rgba(255, 85, 0, 0.03) 50%, transparent 70%)",
-          filter: "blur(70px)",
+          background: "radial-gradient(circle, rgba(255, 85, 0, 0.1) 0%, transparent 70%)",
+          filter: "blur(60px)",
           pointerEvents: "none",
           zIndex: 0,
         }}
@@ -232,13 +203,9 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
         }}
       >
         {/* ============================================================ */}
-        {/* 1. SCROLL-ANIMATED EDITORIAL HEADER WITH LIQUID ACCENTS      */}
+        {/* 1. SCROLL-POP HEADING (SPRING BOUNCE / 3D ENTER ON SCROLL)    */}
         {/* ============================================================ */}
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.65, ease: "easeOut" }}
+        <div
           style={{
             display: "flex",
             justifyContent: "space-between",
@@ -251,7 +218,12 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
           }}
         >
           <div>
-            <div
+            {/* Pop-in Kicker */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 25 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.4 }}
+              transition={{ type: "spring", stiffness: 350, damping: 22 }}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -266,19 +238,29 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
                 color: "#FF5500",
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
-                marginBottom: "10px",
+                marginBottom: "12px",
               }}
             >
               <Sparkles size={12} />
               <span>TAKEAWAY TUBS • KANJIKUZHI, KOTTAYAM</span>
-            </div>
+            </motion.div>
 
-            <h2
+            {/* HIGH-IMPACT POP-IN TITLE */}
+            <motion.h2
+              initial={{ opacity: 0, scale: 0.82, y: 40, filter: "blur(8px)" }}
+              whileInView={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{
+                type: "spring",
+                stiffness: 280,
+                damping: 20,
+                mass: 0.8,
+              }}
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "clamp(2.4rem, 5.2vw, 4.4rem)",
+                fontSize: "clamp(2.6rem, 5.5vw, 4.8rem)",
                 fontWeight: 950,
-                lineHeight: 0.98,
+                lineHeight: 0.95,
                 letterSpacing: "-0.035em",
                 textTransform: "uppercase",
                 color: "#2C2727",
@@ -286,10 +268,17 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
               }}
             >
               ORDER YOUR BUCKET
-            </h2>
+            </motion.h2>
           </div>
 
-          <div style={{ maxWidth: "460px" }}>
+          {/* Subtitle with soft pop */}
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.4 }}
+            transition={{ type: "spring", stiffness: 260, damping: 22, delay: 0.1 }}
+            style={{ maxWidth: "460px" }}
+          >
             <p
               style={{
                 fontSize: "0.98rem",
@@ -298,35 +287,37 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
                 margin: 0,
               }}
             >
-              Pure cow ghee. 36 secret spices. Sealed piping hot inside our
-              iconic food-grade takeaway tubs with genuine hardwood coal dum.
+              Scroll through our signature hardwood coal dum roster. Sealed piping
+              hot in iconic food-grade black takeaway tubs.
             </p>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
 
         {/* ============================================================ */}
-        {/* 2. LIQUID GLASS FLOATING CATEGORY FILTER CAPSULE             */}
+        {/* 2. LIQUID GLASS FLOATING CATEGORY FILTER BAR                 */}
         {/* ============================================================ */}
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.4 }}
+          transition={{ type: "spring", stiffness: 320, damping: 24 }}
           style={{
+            position: "sticky",
+            top: "84px",
+            zIndex: 30,
             display: "inline-flex",
             alignItems: "center",
             gap: "6px",
             padding: "6px 8px",
             borderRadius: "100px",
-            // THE LIQUID GLASS SHELL
-            background: "rgba(255, 255, 255, 0.72)",
+            background: "rgba(255, 255, 255, 0.88)",
             backdropFilter: "blur(28px) saturate(210%)",
             WebkitBackdropFilter: "blur(28px) saturate(210%)",
             border: "1.5px solid rgba(255, 255, 255, 0.95)",
             boxShadow:
-              "0 12px 35px rgba(0, 0, 0, 0.05), inset 0 1px 2px rgba(255, 255, 255, 0.95), 0 0 0 1px rgba(44, 39, 39, 0.06)",
+              "0 12px 35px rgba(0, 0, 0, 0.08), inset 0 1px 2px #FFFFFF",
             flexWrap: "wrap",
-            marginBottom: "36px",
+            marginBottom: "40px",
           }}
         >
           {[
@@ -340,13 +331,15 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
               <motion.button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                whileHover={{ scale: 1.03 }}
+                whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
                 style={{
                   position: "relative",
                   padding: "8px 20px",
                   borderRadius: "100px",
-                  background: isSelected ? "#2C2727" : "transparent",
+                  background: isSelected
+                    ? "linear-gradient(135deg, #2C2727 0%, #1A1717 100%)"
+                    : "transparent",
                   color: isSelected ? "#FFFFFF" : "#595353",
                   border: isSelected
                     ? "1.5px solid #2C2727"
@@ -368,7 +361,7 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
                 <span
                   style={{
                     fontSize: "0.7rem",
-                    opacity: isSelected ? 0.9 : 0.6,
+                    opacity: isSelected ? 0.95 : 0.65,
                     background: isSelected
                       ? "rgba(255, 255, 255, 0.22)"
                       : "rgba(44, 39, 39, 0.08)",
@@ -385,11 +378,10 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
         </motion.div>
 
         {/* ============================================================ */}
-        {/* 3. SCROLL-ANIMATED TYPOGRAPHIC ROSTER WITH LIQUID GLASS SLAB */}
+        {/* 3. SCROLL-STACKING CARDS SYSTEM (CARDS LAYER ON SCROLL)      */}
         {/* ============================================================ */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        <div style={{ position: "relative", width: "100%" }}>
           {filteredDishes.map((dish, idx) => {
-            const isExpanded = expandedDishId === dish.id;
             const dishAccent = dish.isVeg ? "#1B9C52" : "#FF5500";
             const portionIdx = selectedPortions[dish.id] || 0;
             const chosenPortion = dish.portions[portionIdx] || dish.portions[0];
@@ -397,104 +389,98 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
             return (
               <motion.div
                 key={dish.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.5, delay: idx * 0.06 }}
-                whileHover={!isExpanded ? { x: 3 } : {}}
-                style={{
-                  borderRadius: "26px",
-                  transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                  // EXPANDED LIQUID GLASS FLOATING PANEL
-                  background: isExpanded
-                    ? "rgba(255, 255, 255, 0.82)"
-                    : "transparent",
-                  backdropFilter: isExpanded
-                    ? "blur(32px) saturate(210%)"
-                    : "none",
-                  WebkitBackdropFilter: isExpanded
-                    ? "blur(32px) saturate(210%)"
-                    : "none",
-                  border: isExpanded
-                    ? "1.5px solid rgba(255, 255, 255, 0.95)"
-                    : "1px solid rgba(44, 39, 39, 0.08)",
-                  boxShadow: isExpanded
-                    ? "0 22px 60px rgba(0, 0, 0, 0.07), inset 0 1px 2px rgba(255, 255, 255, 0.95), 0 0 0 1.5px rgba(255, 85, 0, 0.12)"
-                    : "none",
-                  padding: isExpanded ? "26px 30px" : "22px 16px",
+                initial={{ opacity: 0, y: 60, scale: 0.94 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: false, amount: 0.15 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 260,
+                  damping: 24,
+                  delay: idx * 0.04,
                 }}
+                style={{
+                  // STICKY STACKING ENGINE
+                  position: "sticky",
+                  top: `calc(130px + ${idx * 22}px)`,
+                  zIndex: idx + 2,
+                  marginBottom: idx === filteredDishes.length - 1 ? "40px" : "80px",
+                  // THE LIQUID GLASS STACKED CARD
+                  background:
+                    "linear-gradient(145deg, rgba(255, 255, 255, 0.96) 0%, rgba(252, 250, 248, 0.92) 100%)",
+                  backdropFilter: "blur(36px) saturate(220%)",
+                  WebkitBackdropFilter: "blur(36px) saturate(220%)",
+                  borderRadius: "32px",
+                  padding: "32px 36px",
+                  border: "1.5px solid rgba(255, 255, 255, 0.95)",
+                  boxShadow: `0 -4px 20px rgba(0, 0, 0, 0.02), 0 24px 60px rgba(0, 0, 0, 0.08), inset 0 1px 2px #FFFFFF, 0 0 0 1px rgba(44, 39, 39, 0.08)`,
+                }}
+                className="stacking-menu-card"
               >
-                {/* Header Row: Wide, balanced, generous spacing */}
+                {/* Card Top Row: Number, Pop-in Name, Tag, Price */}
                 <div
-                  onClick={() => handleToggleDish(dish.id)}
                   style={{
-                    cursor: "pointer",
                     display: "flex",
                     justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: "24px",
+                    alignItems: "flex-start",
+                    flexWrap: "wrap",
+                    gap: "20px",
+                    marginBottom: "16px",
+                    paddingBottom: "16px",
+                    borderBottom: "1px solid rgba(44, 39, 39, 0.07)",
                   }}
                 >
-                  {/* Left: Number + Title + Dietary Pill */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "20px",
-                      flex: 1,
-                      minWidth: 0,
-                    }}
-                  >
+                  <div style={{ display: "flex", alignItems: "baseline", gap: "18px" }}>
                     <span
                       style={{
                         fontFamily: "var(--font-display)",
-                        fontSize: "1rem",
-                        fontWeight: 900,
-                        color: isExpanded ? dishAccent : "#9B9595",
-                        transition: "color 0.2s ease",
+                        fontSize: "1.2rem",
+                        fontWeight: 950,
+                        color: dishAccent,
                         minWidth: "28px",
                       }}
                     >
                       {dish.number}
                     </span>
 
-                    <div style={{ display: "flex", flexDirection: "column", gap: "4px", minWidth: 0 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
-                        <h3
+                    <div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                        {/* HEADING POP ANIMATION ON SCROLL */}
+                        <motion.h3
+                          initial={{ opacity: 0, scale: 0.88, x: -15, filter: "blur(6px)" }}
+                          whileInView={{ opacity: 1, scale: 1, x: 0, filter: "blur(0px)" }}
+                          viewport={{ once: false, amount: 0.4 }}
+                          transition={{ type: "spring", stiffness: 320, damping: 22 }}
                           style={{
                             fontFamily: "var(--font-display)",
-                            fontSize: "clamp(1.35rem, 2.5vw, 1.95rem)",
+                            fontSize: "clamp(1.5rem, 2.8vw, 2.2rem)",
                             fontWeight: 950,
-                            letterSpacing: "-0.025em",
+                            letterSpacing: "-0.03em",
                             textTransform: "uppercase",
-                            color: isExpanded ? dishAccent : "#2C2727",
-                            lineHeight: 1.15,
+                            color: "#2C2727",
+                            lineHeight: 1.1,
                             margin: 0,
-                            transition: "color 0.2s ease",
                           }}
                         >
                           {dish.name}
-                        </h3>
+                        </motion.h3>
 
-                        {/* Dietary Pill with Liquid Glass Sheen */}
+                        {/* Dietary Badge */}
                         <span
                           style={{
                             display: "inline-flex",
                             alignItems: "center",
                             gap: "5px",
-                            padding: "3px 10px",
+                            padding: "4px 10px",
                             borderRadius: "100px",
-                            fontSize: "0.68rem",
+                            fontSize: "0.7rem",
                             fontWeight: 900,
                             textTransform: "uppercase",
                             letterSpacing: "0.06em",
                             background: dish.isVeg
-                              ? "rgba(27, 156, 82, 0.1)"
-                              : "rgba(255, 85, 0, 0.1)",
-                            backdropFilter: "blur(10px)",
+                              ? "rgba(27, 156, 82, 0.12)"
+                              : "rgba(255, 85, 0, 0.12)",
                             color: dishAccent,
                             border: `1px solid ${dishAccent}33`,
-                            boxShadow: `0 2px 8px ${dish.isVeg ? "rgba(27, 156, 82, 0.15)" : "rgba(255, 85, 0, 0.15)"}`,
                           }}
                         >
                           <span
@@ -511,11 +497,12 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
 
                       <div
                         style={{
-                          fontSize: "0.78rem",
+                          fontSize: "0.8rem",
                           fontWeight: 700,
                           color: "#8E8888",
                           textTransform: "uppercase",
-                          letterSpacing: "0.05em",
+                          letterSpacing: "0.06em",
+                          marginTop: "4px",
                         }}
                       >
                         {dish.tag}
@@ -523,308 +510,269 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
                     </div>
                   </div>
 
-                  {/* Right: Price + Chevron with Liquid Circle */}
+                  {/* Active Price with Live Animation */}
+                  <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>
+                    <motion.div
+                      key={chosenPortion.price}
+                      initial={{ scale: 0.85, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: "clamp(1.5rem, 2.4vw, 2rem)",
+                        fontWeight: 950,
+                        color: dishAccent,
+                      }}
+                    >
+                      ₹{chosenPortion.price}
+                      <span
+                        style={{
+                          fontSize: "0.72rem",
+                          color: "#8E8888",
+                          fontWeight: 700,
+                          marginLeft: "5px",
+                        }}
+                      >
+                        + GST
+                      </span>
+                    </motion.div>
+                    <div style={{ fontSize: "0.72rem", color: "#8E8888", fontWeight: 700 }}>
+                      {chosenPortion.label}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Description & Story */}
+                <p
+                  style={{
+                    fontSize: "0.98rem",
+                    color: "#595353",
+                    lineHeight: 1.65,
+                    margin: "0 0 20px",
+                    maxWidth: "920px",
+                  }}
+                >
+                  {dish.desc}{" "}
+                  <strong style={{ color: "#2C2727", fontWeight: 700 }}>
+                    {dish.story}
+                  </strong>
+                </p>
+
+                {/* Portion Size Selection Line */}
+                <div style={{ marginBottom: "22px" }}>
+                  <div
+                    style={{
+                      fontSize: "0.75rem",
+                      fontWeight: 900,
+                      color: "#8E8888",
+                      letterSpacing: "0.12em",
+                      textTransform: "uppercase",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    Select Portion Size:
+                  </div>
+
                   <div
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: "16px",
-                      textAlign: "right",
-                      whiteSpace: "nowrap",
+                      flexWrap: "wrap",
+                      gap: "10px",
                     }}
                   >
-                    <div>
-                      <span
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontSize: "clamp(1.25rem, 2.1vw, 1.65rem)",
-                          fontWeight: 950,
-                          color: isExpanded ? dishAccent : "#2C2727",
-                          transition: "color 0.2s ease",
-                        }}
-                      >
-                        ₹{chosenPortion.price}
-                      </span>
-                      <span style={{ fontSize: "0.68rem", color: "#8E8888", fontWeight: 700, marginLeft: "4px" }}>
-                        + GST
-                      </span>
-                    </div>
+                    {dish.portions.map((portion, pIdx) => {
+                      const isChosen = portionIdx === pIdx;
 
-                    <motion.div
-                      animate={{ rotate: isExpanded ? 180 : 0 }}
-                      transition={{ duration: 0.25 }}
-                      style={{
-                        width: "34px",
-                        height: "34px",
-                        borderRadius: "50%",
-                        background: isExpanded
-                          ? "rgba(255, 85, 0, 0.12)"
-                          : "rgba(44, 39, 39, 0.05)",
-                        backdropFilter: "blur(12px)",
-                        border: isExpanded
-                          ? "1px solid rgba(255, 85, 0, 0.25)"
-                          : "1px solid rgba(44, 39, 39, 0.08)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: isExpanded ? dishAccent : "#8E8888",
-                      }}
-                    >
-                      <ChevronDown size={16} />
-                    </motion.div>
+                      return (
+                        <motion.button
+                          key={portion.shortLabel}
+                          onClick={() => handleSelectPortion(dish.id, pIdx)}
+                          whileHover={{ scale: 1.04 }}
+                          whileTap={{ scale: 0.96 }}
+                          style={{
+                            padding: "9px 20px",
+                            borderRadius: "100px",
+                            // LIQUID GLASS PORTION PILL
+                            background: isChosen
+                              ? dish.isVeg
+                                ? "linear-gradient(135deg, #1B9C52 0%, #157A40 100%)"
+                                : "linear-gradient(135deg, #FF6F00 0%, #FF5500 50%, #FF3D00 100%)"
+                              : "rgba(255, 255, 255, 0.8)",
+                            backdropFilter: "blur(16px)",
+                            color: isChosen ? "#FFFFFF" : "#2C2727",
+                            border: isChosen
+                              ? "1.5px solid rgba(255, 255, 255, 0.6)"
+                              : "1.2px solid rgba(44, 39, 39, 0.14)",
+                            boxShadow: isChosen
+                              ? `0 8px 24px ${
+                                  dish.isVeg
+                                    ? "rgba(27, 156, 82, 0.4)"
+                                    : "rgba(255, 85, 0, 0.4)"
+                                }, inset 0 1px 1px rgba(255, 255, 255, 0.6)`
+                              : "0 4px 14px rgba(0, 0, 0, 0.04), inset 0 1px 1px #FFFFFF",
+                            fontSize: "0.82rem",
+                            fontWeight: 800,
+                            fontFamily: "var(--font-display)",
+                            letterSpacing: "0.025em",
+                            cursor: "pointer",
+                            transition: "all 0.15s ease",
+                          }}
+                        >
+                          <span>{portion.label}</span>
+                          <span
+                            style={{
+                              marginLeft: "6px",
+                              fontWeight: 950,
+                              color: isChosen ? "#FFFFFF" : dishAccent,
+                            }}
+                          >
+                            ₹{portion.price}
+                          </span>
+                        </motion.button>
+                      );
+                    })}
                   </div>
                 </div>
 
-                {/* Expanded Details: Liquid Glass Content Layer */}
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.25, ease: "easeOut" }}
-                      style={{
-                        paddingLeft: "clamp(0px, 3.5vw, 48px)",
-                        marginTop: "18px",
-                        overflow: "hidden",
-                      }}
-                    >
-                      {/* Description & Dum Story */}
-                      <p
-                        style={{
-                          fontSize: "0.96rem",
-                          color: "#595353",
-                          lineHeight: 1.65,
-                          margin: "0 0 18px",
-                          maxWidth: "860px",
-                        }}
-                      >
-                        {dish.desc}{" "}
-                        <span style={{ color: "#2C2727", fontWeight: 600 }}>
-                          {dish.story}
-                        </span>
-                      </p>
+                {/* Actions: Add to Tray + WhatsApp Direct + Swiggy + Zomato */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "14px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {/* Primary Add to Tray */}
+                  <motion.button
+                    onClick={() => handleAdd(dish, chosenPortion)}
+                    whileHover={{ scale: 1.03, y: -1 }}
+                    whileTap={{ scale: 0.96 }}
+                    style={{
+                      padding: "13px 30px",
+                      borderRadius: "100px",
+                      background:
+                        addedKey === `${dish.id}-${chosenPortion.shortLabel}`
+                          ? "#27AE60"
+                          : dish.isVeg
+                          ? "linear-gradient(135deg, #1B9C52 0%, #157A40 100%)"
+                          : "linear-gradient(135deg, #FF6F00 0%, #FF5500 50%, #FF3D00 100%)",
+                      color: "#FFFFFF",
+                      fontSize: "0.88rem",
+                      fontWeight: 950,
+                      fontFamily: "var(--font-display)",
+                      letterSpacing: "0.04em",
+                      textTransform: "uppercase",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      border: "none",
+                      cursor: "pointer",
+                      boxShadow: `0 10px 25px ${
+                        dish.isVeg
+                          ? "rgba(27, 156, 82, 0.35)"
+                          : "rgba(255, 85, 0, 0.38)"
+                      }, inset 0 1px 1px rgba(255, 255, 255, 0.45)`,
+                      transition: "all 0.2s ease",
+                    }}
+                  >
+                    {addedKey === `${dish.id}-${chosenPortion.shortLabel}` ? (
+                      <>
+                        <Check size={16} />
+                        <span>Added {chosenPortion.shortLabel}!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Plus size={16} />
+                        <span>Add {chosenPortion.shortLabel} to Tray (₹{chosenPortion.price})</span>
+                      </>
+                    )}
+                  </motion.button>
 
-                      {/* Portion Selection Header */}
-                      <div
-                        style={{
-                          fontSize: "0.75rem",
-                          fontWeight: 900,
-                          color: "#8E8888",
-                          letterSpacing: "0.12em",
-                          textTransform: "uppercase",
-                          marginBottom: "10px",
-                        }}
-                      >
-                        Select Portion Size:
-                      </div>
+                  {/* 1-Click WhatsApp Quick Order for this Dish */}
+                  <motion.a
+                    href={`https://wa.me/918089080342?text=${encodeURIComponent(
+                      `🔥 *ORDER - the BIRYANI CO. (Kanjikuzhi, Kottayam)*\n• 1x *${dish.name}* (${chosenPortion.label}) - ₹${chosenPortion.price}\n\nPlease confirm availability and preparation time. Thank you!`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.03, y: -1 }}
+                    whileTap={{ scale: 0.96 }}
+                    style={{
+                      fontSize: "0.84rem",
+                      fontWeight: 900,
+                      color: "#FFFFFF",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "7px",
+                      textDecoration: "none",
+                      padding: "11px 22px",
+                      borderRadius: "100px",
+                      background: "linear-gradient(135deg, #25D366 0%, #1EBE5B 100%)",
+                      boxShadow:
+                        "0 8px 20px rgba(37, 211, 102, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4)",
+                      border: "1px solid rgba(255, 255, 255, 0.3)",
+                    }}
+                  >
+                    <WhatsAppIcon size={17} color="#FFFFFF" />
+                    <span>WhatsApp Order</span>
+                  </motion.a>
 
-                      {/* Liquid Glass Portion Selector Pills */}
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          flexWrap: "wrap",
-                          gap: "10px",
-                          marginBottom: "22px",
-                        }}
-                      >
-                        {dish.portions.map((portion, pIdx) => {
-                          const isChosen = portionIdx === pIdx;
+                  {/* Liquid Frosted Swiggy Link */}
+                  <motion.a
+                    href="https://www.swiggy.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.03, y: -1 }}
+                    whileTap={{ scale: 0.96 }}
+                    style={{
+                      fontSize: "0.82rem",
+                      fontWeight: 800,
+                      color: "#FC8019",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "5px",
+                      textDecoration: "none",
+                      padding: "10px 18px",
+                      borderRadius: "100px",
+                      background: "rgba(255, 244, 237, 0.8)",
+                      backdropFilter: "blur(16px)",
+                      border: "1.5px solid rgba(252, 128, 25, 0.35)",
+                      boxShadow: "0 4px 14px rgba(252, 128, 25, 0.12)",
+                    }}
+                  >
+                    <span>Order on Swiggy</span>
+                    <ArrowUpRight size={13} />
+                  </motion.a>
 
-                          return (
-                            <motion.button
-                              key={portion.shortLabel}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleSelectPortion(dish.id, pIdx);
-                              }}
-                              whileHover={{ scale: 1.03 }}
-                              whileTap={{ scale: 0.96 }}
-                              style={{
-                                padding: "9px 18px",
-                                borderRadius: "100px",
-                                // LIQUID GLASS PORTION PILL
-                                background: isChosen
-                                  ? dish.isVeg
-                                    ? "linear-gradient(135deg, #1B9C52 0%, #157A40 100%)"
-                                    : "linear-gradient(135deg, #FF6F00 0%, #FF5500 50%, #FF3D00 100%)"
-                                  : "rgba(255, 255, 255, 0.75)",
-                                backdropFilter: "blur(16px)",
-                                WebkitBackdropFilter: "blur(16px)",
-                                color: isChosen ? "#FFFFFF" : "#2C2727",
-                                border: isChosen
-                                  ? "1.5px solid rgba(255, 255, 255, 0.6)"
-                                  : "1.2px solid rgba(44, 39, 39, 0.12)",
-                                boxShadow: isChosen
-                                  ? `0 8px 24px ${dish.isVeg ? "rgba(27, 156, 82, 0.4)" : "rgba(255, 85, 0, 0.4)"}, inset 0 1px 1px rgba(255, 255, 255, 0.6)`
-                                  : "0 4px 14px rgba(0, 0, 0, 0.04), inset 0 1px 1px #FFFFFF",
-                                fontSize: "0.82rem",
-                                fontWeight: 800,
-                                fontFamily: "var(--font-display)",
-                                letterSpacing: "0.025em",
-                                cursor: "pointer",
-                                transition: "all 0.15s ease",
-                              }}
-                            >
-                              <span>{portion.label}</span>
-                              <span
-                                style={{
-                                  marginLeft: "6px",
-                                  fontWeight: 950,
-                                  color: isChosen ? "#FFFFFF" : dishAccent,
-                                }}
-                              >
-                                ₹{portion.price}
-                              </span>
-                            </motion.button>
-                          );
-                        })}
-                      </div>
-
-                      {/* Action Bar: Glowing Liquid Glass Buttons */}
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "14px",
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        {/* Primary Add to Tray Liquid Glass Button */}
-                        <motion.button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAdd(dish, chosenPortion);
-                          }}
-                          whileHover={{ scale: 1.03, y: -1 }}
-                          whileTap={{ scale: 0.96 }}
-                          style={{
-                            padding: "12px 28px",
-                            borderRadius: "100px",
-                            background:
-                              addedKey === `${dish.id}-${chosenPortion.shortLabel}`
-                                ? "#27AE60"
-                                : dish.isVeg
-                                ? "linear-gradient(135deg, #1B9C52 0%, #157A40 100%)"
-                                : "linear-gradient(135deg, #FF6F00 0%, #FF5500 50%, #FF3D00 100%)",
-                            color: "#FFFFFF",
-                            fontSize: "0.85rem",
-                            fontWeight: 950,
-                            fontFamily: "var(--font-display)",
-                            letterSpacing: "0.04em",
-                            textTransform: "uppercase",
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "8px",
-                            border: "none",
-                            cursor: "pointer",
-                            boxShadow: `0 10px 25px ${
-                              dish.isVeg
-                                ? "rgba(27, 156, 82, 0.35)"
-                                : "rgba(255, 85, 0, 0.38)"
-                            }, inset 0 1px 1px rgba(255, 255, 255, 0.45)`,
-                            transition: "all 0.2s ease",
-                          }}
-                        >
-                          {addedKey === `${dish.id}-${chosenPortion.shortLabel}` ? (
-                            <>
-                              <Check size={16} />
-                              <span>Added {chosenPortion.shortLabel}!</span>
-                            </>
-                          ) : (
-                            <>
-                              <Plus size={16} />
-                              <span>Add {chosenPortion.shortLabel} to Tray (₹{chosenPortion.price})</span>
-                            </>
-                          )}
-                        </motion.button>
-
-                        {/* 1-Click WhatsApp Quick Order for this Dish */}
-                        <motion.a
-                          href={`https://wa.me/918089080342?text=${encodeURIComponent(
-                            `🔥 *ORDER - the BIRYANI CO. (Kanjikuzhi, Kottayam)*\n• 1x *${dish.name}* (${chosenPortion.label}) - ₹${chosenPortion.price}\n\nPlease confirm availability and preparation time. Thank you!`
-                          )}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          whileHover={{ scale: 1.03, y: -1 }}
-                          whileTap={{ scale: 0.96 }}
-                          style={{
-                            fontSize: "0.82rem",
-                            fontWeight: 900,
-                            color: "#FFFFFF",
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "6px",
-                            textDecoration: "none",
-                            padding: "10px 20px",
-                            borderRadius: "100px",
-                            background: "linear-gradient(135deg, #25D366 0%, #1EBE5B 100%)",
-                            boxShadow: "0 6px 18px rgba(37, 211, 102, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4)",
-                            border: "1px solid rgba(255, 255, 255, 0.3)",
-                          }}
-                        >
-                          <WhatsAppIcon size={16} color="#FFFFFF" />
-                          <span>WhatsApp Order</span>
-                        </motion.a>
-
-                        {/* Liquid Frosted Swiggy Link */}
-                        <motion.a
-                          href="https://www.swiggy.com"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          whileHover={{ scale: 1.03, y: -1 }}
-                          whileTap={{ scale: 0.96 }}
-                          style={{
-                            fontSize: "0.82rem",
-                            fontWeight: 800,
-                            color: "#FC8019",
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "5px",
-                            textDecoration: "none",
-                            padding: "9px 18px",
-                            borderRadius: "100px",
-                            background: "rgba(255, 244, 237, 0.75)",
-                            backdropFilter: "blur(16px)",
-                            border: "1.5px solid rgba(252, 128, 25, 0.35)",
-                            boxShadow: "0 4px 14px rgba(252, 128, 25, 0.12)",
-                          }}
-                        >
-                          <span>Order on Swiggy</span>
-                          <ArrowUpRight size={13} />
-                        </motion.a>
-
-                        {/* Liquid Frosted Zomato Link */}
-                        <motion.a
-                          href="https://www.zomato.com"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          whileHover={{ scale: 1.03, y: -1 }}
-                          whileTap={{ scale: 0.96 }}
-                          style={{
-                            fontSize: "0.82rem",
-                            fontWeight: 800,
-                            color: "#E23744",
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "5px",
-                            textDecoration: "none",
-                            padding: "9px 18px",
-                            borderRadius: "100px",
-                            background: "rgba(255, 241, 242, 0.75)",
-                            backdropFilter: "blur(16px)",
-                            border: "1.5px solid rgba(226, 55, 68, 0.35)",
-                            boxShadow: "0 4px 14px rgba(226, 55, 68, 0.12)",
-                          }}
-                        >
-                          <span>Order on Zomato</span>
-                          <ArrowUpRight size={13} />
-                        </motion.a>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                  {/* Liquid Frosted Zomato Link */}
+                  <motion.a
+                    href="https://www.zomato.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.03, y: -1 }}
+                    whileTap={{ scale: 0.96 }}
+                    style={{
+                      fontSize: "0.82rem",
+                      fontWeight: 800,
+                      color: "#E23744",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "5px",
+                      textDecoration: "none",
+                      padding: "10px 18px",
+                      borderRadius: "100px",
+                      background: "rgba(255, 241, 242, 0.8)",
+                      backdropFilter: "blur(16px)",
+                      border: "1.5px solid rgba(226, 55, 68, 0.35)",
+                      boxShadow: "0 4px 14px rgba(226, 55, 68, 0.12)",
+                    }}
+                  >
+                    <span>Order on Zomato</span>
+                    <ArrowUpRight size={13} />
+                  </motion.a>
+                </div>
               </motion.div>
             );
           })}
@@ -834,21 +782,20 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
         {/* 4. LIQUID GLASS FLOATING FOOTER STRIP                        */}
         {/* ============================================================ */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6 }}
           style={{
-            marginTop: "50px",
-            // THE LIQUID GLASS RIBBON
-            background: "rgba(255, 255, 255, 0.8)",
+            marginTop: "60px",
+            background: "rgba(255, 255, 255, 0.85)",
             backdropFilter: "blur(28px) saturate(210%)",
             WebkitBackdropFilter: "blur(28px) saturate(210%)",
             border: "1.5px solid rgba(255, 255, 255, 0.95)",
-            borderRadius: "20px",
-            padding: "16px 28px",
+            borderRadius: "24px",
+            padding: "18px 28px",
             boxShadow:
-              "0 15px 40px rgba(0, 0, 0, 0.05), inset 0 1px 2px rgba(255, 255, 255, 0.95), 0 0 0 1px rgba(44, 39, 39, 0.06)",
+              "0 15px 40px rgba(0, 0, 0, 0.05), inset 0 1px 2px #FFFFFF",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
@@ -905,7 +852,11 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
       <style jsx global>{`
         @media (max-width: 768px) {
           #menu {
-            padding: 70px 0 60px !important;
+            padding: 80px 0 60px !important;
+          }
+          .stacking-menu-card {
+            padding: 22px 18px !important;
+            border-radius: 24px !important;
           }
           .liquid-menu-footer {
             flex-direction: column !important;

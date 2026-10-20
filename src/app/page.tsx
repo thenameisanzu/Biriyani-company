@@ -1,69 +1,78 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import React, { useState } from "react";
+import Navbar from "@/components/Navbar";
+import HeroSection from "@/components/HeroSection";
+import MarqueeTicker from "@/components/MarqueeTicker";
+import MenuSection from "@/components/MenuSection";
+import DeliverySection from "@/components/DeliverySection";
+import MapSection from "@/components/MapSection";
+import QuickOrderDrawer from "@/components/QuickOrderDrawer";
+import Footer from "@/components/Footer";
+import { MenuItemType } from "@/components/FoodDetailModal";
 
 export default function Home() {
+  const [trayItems, setTrayItems] = useState<{ item: MenuItemType; count: number }[]>([]);
+
+  const handleAddToTray = (item: MenuItemType) => {
+    setTrayItems((prev) => {
+      const existing = prev.find((i) => i.item.id === item.id);
+      if (existing) {
+        return prev.map((i) =>
+          i.item.id === item.id ? { ...i, count: i.count + 1 } : i
+        );
+      }
+      return [...prev, { item, count: 1 }];
+    });
+  };
+
+  const handleUpdateCount = (itemId: string, delta: number) => {
+    setTrayItems((prev) => {
+      return prev
+        .map((i) => {
+          if (i.item.id === itemId) {
+            const newCount = i.count + delta;
+            return newCount > 0 ? { ...i, count: newCount } : null;
+          }
+          return i;
+        })
+        .filter(Boolean) as { item: MenuItemType; count: number }[];
+    });
+  };
+
+  const handleClearTray = () => {
+    setTrayItems([]);
+  };
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main style={{ minHeight: "100vh", position: "relative", background: "#FFFFFF" }}>
+      {/* Fixed Sticky Header Navigation */}
+      <Navbar />
+
+      {/* Vibrant Orange & Minimal Steaming Bowl Hero */}
+      <HeroSection />
+
+      {/* Seamless Marquee Ticker */}
+      <MarqueeTicker />
+
+      {/* Minimalist Awwwards Menu */}
+      <MenuSection onAddToTray={handleAddToTray} />
+
+      {/* Redesigned Awwwards Swiggy & Zomato Portal */}
+      <DeliverySection />
+
+      {/* Google Maps & Restaurant Location */}
+      <MapSection />
+
+      {/* Floating Interactive Order Tray */}
+      <QuickOrderDrawer
+        items={trayItems}
+        onUpdateCount={handleUpdateCount}
+        onClear={handleClearTray}
+      />
+
+      {/* Vibrant Orange Brand Footer */}
+      <Footer />
+    </main>
   );
 }

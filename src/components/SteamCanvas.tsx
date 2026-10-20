@@ -43,8 +43,9 @@ export default function SteamCanvas({ className = "" }: { className?: string }) 
 
     window.addEventListener("resize", handleResize);
 
+    let isVisible = true;
     const puffs: SteamPuff[] = [];
-    const maxPuffs = 95;
+    const maxPuffs = 45; // Optimized from 95 to prevent CPU frame drops
 
     // Hot emitters along the rim of the biryani handi pot
     const spawnPuff = (): SteamPuff => {
@@ -155,12 +156,26 @@ export default function SteamCanvas({ className = "" }: { className?: string }) 
         ctx.restore();
       }
 
-      animId = requestAnimationFrame(render);
+      if (isVisible) {
+        animId = requestAnimationFrame(render);
+      }
     };
 
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) {
+          cancelAnimationFrame(animId);
+          animId = requestAnimationFrame(render);
+        }
+      });
+    }, { threshold: 0.05 });
+
+    observer.observe(canvas);
     render();
 
     return () => {
+      observer.disconnect();
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", handleResize);
     };

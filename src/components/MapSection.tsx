@@ -19,6 +19,7 @@ export default function MapSection() {
       }}
     >
       <div
+        className="location-container"
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
@@ -85,6 +86,7 @@ export default function MapSection() {
         >
           {/* Interactive Google Map Embed */}
           <div
+            className="map-embed-wrapper"
             style={{
               position: "relative",
               borderRadius: "32px",
@@ -176,6 +178,7 @@ export default function MapSection() {
 
           {/* Location & Visiting Details Card in Liquid Glass */}
           <motion.div
+            className="location-info-card"
             initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
@@ -261,7 +264,7 @@ export default function MapSection() {
             </div>
 
             {/* Direct Calls & Action */}
-            <div style={{ display: "flex", gap: "12px" }}>
+            <div className="location-actions-row" style={{ display: "flex", gap: "12px" }}>
               <a
                 href="tel:8089080342"
                 style={{
@@ -319,11 +322,37 @@ export default function MapSection() {
           }
           .map-grid {
             grid-template-columns: 1fr !important;
+            gap: 28px !important;
+          }
+          .location-info-card {
+            padding: 32px 28px !important;
           }
         }
         @media (max-width: 600px) {
           #location {
             padding: 60px 0 !important;
+          }
+          .location-container {
+            padding: 0 16px !important;
+          }
+          .map-embed-wrapper {
+            min-height: 320px !important;
+            border-radius: 24px !important;
+          }
+          .map-embed-wrapper iframe {
+            min-height: 320px !important;
+          }
+          .location-info-card {
+            padding: 24px 18px !important;
+            border-radius: 24px !important;
+          }
+          .location-actions-row {
+            flex-direction: column !important;
+            gap: 10px !important;
+          }
+          .location-actions-row a {
+            width: 100% !important;
+            padding: 14px !important;
           }
         }
       `}</style>

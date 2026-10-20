@@ -242,6 +242,7 @@ export default function AboutSection() {
 
         {/* Interactive "Unseal The Dum Handi" Feature */}
         <div
+          className="unseal-interactive-card"
           style={{
             background: "linear-gradient(135deg, #2C2727 0%, #3E3939 100%)",
             borderRadius: "36px",
@@ -445,16 +446,30 @@ export default function AboutSection() {
 
       <style jsx global>{`
         @media (max-width: 980px) {
+          #about {
+            padding: 80px 0 !important;
+          }
           .steps-grid {
             grid-template-columns: 1fr 1fr !important;
           }
           .unseal-grid {
             grid-template-columns: 1fr !important;
+            gap: 28px !important;
+          }
+          .unseal-interactive-card {
+            padding: 36px 28px !important;
           }
         }
         @media (max-width: 640px) {
+          #about {
+            padding: 60px 0 !important;
+          }
           .steps-grid {
             grid-template-columns: 1fr !important;
+          }
+          .unseal-interactive-card {
+            padding: 24px 18px !important;
+            border-radius: 24px !important;
           }
         }
       `}</style>

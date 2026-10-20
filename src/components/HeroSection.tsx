@@ -372,6 +372,7 @@ export default function HeroSection() {
 
               {/* Minimal floating pill at bottom of bowl with Liquid Glass */}
               <motion.div
+                className="hero-bowl-bottom-pill"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4 }}
@@ -432,6 +433,23 @@ export default function HeroSection() {
           }
           .hero-minimal-grid {
             gap: 28px !important;
+          }
+          .hero-floating-glass-badge.left-badge {
+            left: 0px !important;
+            top: 5% !important;
+            padding: 6px 12px !important;
+            font-size: 0.7rem !important;
+          }
+          .hero-floating-glass-badge.right-badge {
+            right: 0px !important;
+            top: 5% !important;
+            padding: 6px 12px !important;
+            font-size: 0.7rem !important;
+          }
+          .hero-bowl-bottom-pill {
+            padding: 8px 16px !important;
+            font-size: 0.74rem !important;
+            bottom: -10px !important;
           }
         }
       `}</style>

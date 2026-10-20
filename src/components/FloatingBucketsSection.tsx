@@ -545,6 +545,7 @@ export default function FloatingBucketsSection() {
 
           <a
             href="#menu"
+            className="burst-cta-btn"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -578,6 +579,17 @@ export default function FloatingBucketsSection() {
           }
           .burst-metrics-row {
             gap: 18px !important;
+          }
+        }
+        @media (max-width: 600px) {
+          .burst-metrics-row {
+            width: 100% !important;
+            justify-content: space-between !important;
+            gap: 12px !important;
+          }
+          .burst-cta-btn {
+            width: 100% !important;
+            justify-content: center !important;
           }
         }
       `}</style>

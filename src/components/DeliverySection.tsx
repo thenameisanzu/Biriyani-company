@@ -26,6 +26,7 @@ export default function DeliverySection() {
       }}
     >
       <div
+        className="delivery-container"
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
@@ -99,6 +100,7 @@ export default function DeliverySection() {
 
             {/* Awwwards Liquid Glass Promo Bar */}
             <motion.div
+              className="delivery-promo-bar"
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
@@ -182,6 +184,7 @@ export default function DeliverySection() {
         >
           {/* Swiggy High-Fashion Liquid Glass Card */}
           <motion.div
+            className="delivery-brand-card"
             initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
@@ -319,6 +322,7 @@ export default function DeliverySection() {
               href="https://www.swiggy.com"
               target="_blank"
               rel="noopener noreferrer"
+              className="delivery-action-btn"
               style={{
                 width: "100%",
                 padding: "20px 32px",
@@ -346,6 +350,7 @@ export default function DeliverySection() {
 
           {/* Zomato High-Fashion Liquid Glass Card */}
           <motion.div
+            className="delivery-brand-card"
             initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
@@ -482,6 +487,7 @@ export default function DeliverySection() {
               href="https://www.zomato.com"
               target="_blank"
               rel="noopener noreferrer"
+              className="delivery-action-btn"
               style={{
                 width: "100%",
                 padding: "20px 32px",
@@ -510,6 +516,7 @@ export default function DeliverySection() {
 
         {/* WhatsApp Direct Ordering Liquid Glass Banner */}
         <motion.div
+          className="delivery-whatsapp-banner"
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -587,6 +594,7 @@ export default function DeliverySection() {
             href="https://wa.me/918089080342?text=Hi%20the%20BIRYANI%20CO.%2C%20I%20would%20like%20to%20order%20biryani%20buckets."
             target="_blank"
             rel="noopener noreferrer"
+            className="delivery-whatsapp-btn"
             whileHover={{ scale: 1.04, y: -2 }}
             whileTap={{ scale: 0.96 }}
             style={{
@@ -698,10 +706,42 @@ export default function DeliverySection() {
           .guarantee-row {
             grid-template-columns: 1fr !important;
           }
+          .delivery-brand-card {
+            padding: 36px 30px !important;
+          }
         }
         @media (max-width: 600px) {
           #delivery {
             padding: 60px 0 !important;
+          }
+          .delivery-container {
+            padding: 0 16px !important;
+          }
+          .delivery-promo-bar {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            border-radius: 18px !important;
+            padding: 10px 14px !important;
+            gap: 8px !important;
+            width: 100% !important;
+            justifyContent: space-between !important;
+          }
+          .delivery-brand-card {
+            padding: 26px 20px !important;
+            border-radius: 24px !important;
+          }
+          .delivery-whatsapp-banner {
+            padding: 22px 18px !important;
+            border-radius: 22px !important;
+            gap: 16px !important;
+          }
+          .delivery-whatsapp-btn {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+          .delivery-action-btn {
+            padding: 16px 20px !important;
+            font-size: 0.92rem !important;
           }
         }
       `}</style>

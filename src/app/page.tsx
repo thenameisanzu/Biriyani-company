@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import MarqueeTicker from "@/components/MarqueeTicker";
-import MenuSection from "@/components/MenuSection";
+import CinematicVideoMenu from "@/components/CinematicVideoMenu";
 import DeliverySection from "@/components/DeliverySection";
 import MapSection from "@/components/MapSection";
 import QuickOrderDrawer from "@/components/QuickOrderDrawer";
@@ -55,8 +55,8 @@ export default function Home() {
       {/* Seamless Marquee Ticker */}
       <MarqueeTicker />
 
-      {/* Minimalist Awwwards Menu */}
-      <MenuSection onAddToTray={handleAddToTray} />
+      {/* Cinematic Fullscreen Scroll-Triggered Video & Glassmorphic Menu */}
+      <CinematicVideoMenu onAddToTray={handleAddToTray} />
 
       {/* Redesigned Awwwards Swiggy & Zomato Portal */}
       <DeliverySection />

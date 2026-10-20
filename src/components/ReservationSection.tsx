@@ -108,6 +108,7 @@ export default function ReservationSection() {
         >
           {/* Reservation Form Card */}
           <div
+            className="reservation-form-card"
             style={{
               background: "#FFFFFF",
               borderRadius: "32px",
@@ -459,6 +460,7 @@ export default function ReservationSection() {
 
           {/* Quick Direct Contact & WhatsApp Card */}
           <div
+            className="reservation-contact-card"
             style={{
               background: "linear-gradient(135deg, #FF6500 0%, #FF5000 100%)",
               color: "#FFFFFF",
@@ -616,12 +618,29 @@ export default function ReservationSection() {
       {/* Responsive adjustments */}
       <style jsx global>{`
         @media (max-width: 900px) {
+          #reservation {
+            padding: 80px 0 !important;
+          }
           .reservation-grid {
             grid-template-columns: 1fr !important;
           }
           .form-row,
           .form-row-three {
             grid-template-columns: 1fr !important;
+          }
+          .reservation-form-card,
+          .reservation-contact-card {
+            padding: 32px 24px !important;
+          }
+        }
+        @media (max-width: 600px) {
+          #reservation {
+            padding: 60px 0 !important;
+          }
+          .reservation-form-card,
+          .reservation-contact-card {
+            padding: 24px 18px !important;
+            border-radius: 24px !important;
           }
         }
       `}</style>

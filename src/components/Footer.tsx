@@ -30,6 +30,7 @@ export default function Footer() {
       }}
     >
       <div
+        className="footer-container"
         style={{
           maxWidth: "1400px",
           margin: "0 auto",
@@ -306,6 +307,9 @@ export default function Footer() {
         @media (max-width: 600px) {
           footer {
             padding-bottom: 120px !important;
+          }
+          .footer-container {
+            padding: 0 16px !important;
           }
           .footer-grid {
             grid-template-columns: 1fr !important;

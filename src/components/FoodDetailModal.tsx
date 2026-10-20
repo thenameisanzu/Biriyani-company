@@ -38,6 +38,7 @@ export default function FoodDetailModal({
   return (
     <AnimatePresence>
       <div
+        className="food-modal-overlay"
         style={{
           position: "fixed",
           inset: 0,
@@ -48,10 +49,12 @@ export default function FoodDetailModal({
           padding: "20px",
           background: "rgba(44, 39, 39, 0.78)",
           backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
         }}
         onClick={onClose}
       >
         <motion.div
+          className="food-modal-card"
           initial={{ opacity: 0, scale: 0.92, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 20 }}
@@ -73,6 +76,7 @@ export default function FoodDetailModal({
           <button
             onClick={onClose}
             aria-label="Close modal"
+            className="food-modal-close-btn"
             style={{
               position: "absolute",
               top: "20px",
@@ -83,11 +87,13 @@ export default function FoodDetailModal({
               borderRadius: "50%",
               background: "rgba(255,255,255,0.92)",
               backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               border: "1px solid rgba(62,57,57,0.15)",
               color: "#2C2727",
+              cursor: "pointer",
             }}
           >
             <X size={22} />
@@ -95,6 +101,7 @@ export default function FoodDetailModal({
 
           {/* Modal Header Image */}
           <div
+            className="food-modal-img-container"
             style={{
               position: "relative",
               width: "100%",
@@ -111,10 +118,11 @@ export default function FoodDetailModal({
               style={{
                 position: "absolute",
                 inset: 0,
-                background: "linear-gradient(to top, rgba(44, 39, 39, 0.9) 0%, transparent 60%)",
+                background: "linear-gradient(to top, rgba(44, 39, 39, 0.92) 0%, rgba(44,39,39,0.3) 50%, transparent 80%)",
               }}
             />
             <div
+              className="food-modal-header-text"
               style={{
                 position: "absolute",
                 bottom: "24px",
@@ -141,7 +149,7 @@ export default function FoodDetailModal({
               </span>
               <h3
                 style={{
-                  fontSize: "2.1rem",
+                  fontSize: "clamp(1.45rem, 4vw, 2.1rem)",
                   fontWeight: 950,
                   fontFamily: "var(--font-display)",
                   lineHeight: 1.1,
@@ -150,16 +158,17 @@ export default function FoodDetailModal({
               >
                 {item.name}
               </h3>
-              <div style={{ color: "#FF7517", fontWeight: 700, fontSize: "1rem", letterSpacing: "0.02em" }}>
+              <div style={{ color: "#FF7517", fontWeight: 700, fontSize: "0.95rem", letterSpacing: "0.02em" }}>
                 {item.regionalStyle}
               </div>
             </div>
           </div>
 
           {/* Content Body */}
-          <div style={{ padding: "34px" }}>
+          <div className="food-modal-body" style={{ padding: "34px" }}>
             {/* Quick Metrics Bar */}
             <div
+              className="food-modal-metrics-grid"
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(4, 1fr)",
@@ -247,6 +256,7 @@ export default function FoodDetailModal({
 
             {/* Actions: Direct Swiggy / Zomato and Tray */}
             <div
+              className="food-modal-actions-grid"
               style={{
                 display: "grid",
                 gridTemplateColumns: "1.1fr 1fr 1fr",
@@ -272,6 +282,7 @@ export default function FoodDetailModal({
                   border: "1.5px solid rgba(255, 117, 23, 0.4)",
                   fontFamily: "var(--font-display)",
                   textTransform: "uppercase",
+                  cursor: "pointer",
                 }}
               >
                 <Utensils size={18} color="#FF7517" />
@@ -294,6 +305,7 @@ export default function FoodDetailModal({
                   justifyContent: "center",
                   gap: "6px",
                   boxShadow: "0 10px 25px rgba(252, 128, 25, 0.35)",
+                  textDecoration: "none",
                 }}
               >
                 <span>Order Swiggy</span>
@@ -316,6 +328,7 @@ export default function FoodDetailModal({
                   justifyContent: "center",
                   gap: "6px",
                   boxShadow: "0 10px 25px rgba(226, 55, 68, 0.35)",
+                  textDecoration: "none",
                 }}
               >
                 <span>Order Zomato</span>
@@ -325,6 +338,48 @@ export default function FoodDetailModal({
           </div>
         </motion.div>
       </div>
+
+      <style jsx global>{`
+        @media (max-width: 768px) {
+          .food-modal-overlay {
+            padding: 12px !important;
+            align-items: flex-end !important;
+          }
+          .food-modal-card {
+            border-radius: 26px 26px 18px 18px !important;
+            max-height: 86vh !important;
+          }
+          .food-modal-img-container {
+            height: 230px !important;
+          }
+          .food-modal-header-text {
+            bottom: 16px !important;
+            left: 18px !important;
+            right: 18px !important;
+          }
+          .food-modal-body {
+            padding: 22px 18px !important;
+          }
+          .food-modal-metrics-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 10px !important;
+            padding: 14px 10px !important;
+            margin-bottom: 22px !important;
+          }
+          .food-modal-actions-grid {
+            grid-template-columns: 1fr !important;
+            gap: 10px !important;
+          }
+        }
+        @media (min-width: 769px) and (max-width: 1024px) {
+          .food-modal-card {
+            max-width: 660px !important;
+          }
+          .food-modal-img-container {
+            height: 280px !important;
+          }
+        }
+      `}</style>
     </AnimatePresence>
   );
 }

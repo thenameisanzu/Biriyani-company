@@ -134,7 +134,7 @@ export default function QuickOrderDrawer({
         <style jsx global>{`
           @media (max-width: 1024px) {
             .order-drawer-container {
-              bottom: calc(max(14px, env(safe-area-inset-bottom)) + 74px) !important;
+              bottom: calc(82px + env(safe-area-inset-bottom, 0px)) !important;
             }
           }
         `}</style>
@@ -158,6 +158,7 @@ export default function QuickOrderDrawer({
       <AnimatePresence>
         {isExpanded && (
           <motion.div
+            className="expanded-tray-card"
             initial={{ opacity: 0, y: 30, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.95 }}
@@ -696,7 +697,17 @@ export default function QuickOrderDrawer({
       <style jsx global>{`
         @media (max-width: 1024px) {
           .order-drawer-container {
-            bottom: calc(max(14px, env(safe-area-inset-bottom)) + 74px) !important;
+            bottom: calc(82px + env(safe-area-inset-bottom, 0px)) !important;
+          }
+        }
+        @media (max-width: 600px) {
+          .order-drawer-container {
+            width: 95% !important;
+          }
+          .expanded-tray-card {
+            padding: 18px 14px !important;
+            border-radius: 24px !important;
+            max-height: 70vh !important;
           }
         }
       `}</style>

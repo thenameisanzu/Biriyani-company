@@ -39,27 +39,45 @@ export default function Navbar() {
   const dockRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<{ [key: string]: HTMLAnchorElement | null }>({});
 
-  // Detect scroll state and active section
+  // Detect scroll state and active section (Throttled with rAF & state guards to prevent scroll jank)
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
+    let ticking = false;
+    let lastScrolled = false;
+    let currentTab = "hero";
 
-      // Section intersection detection
+    const updateScroll = () => {
+      const scrolled = window.scrollY > 40;
+      if (scrolled !== lastScrolled) {
+        lastScrolled = scrolled;
+        setIsScrolled(scrolled);
+      }
+
       const sections = ["location", "delivery", "menu", "hero"];
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
         if (el) {
           const rect = el.getBoundingClientRect();
           if (rect.top <= window.innerHeight * 0.45) {
-            setActiveTab(sectionId);
+            if (sectionId !== currentTab) {
+              currentTab = sectionId;
+              setActiveTab(sectionId);
+            }
             break;
           }
         }
       }
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateScroll);
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    updateScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -189,8 +207,8 @@ export default function Navbar() {
                       position: "relative",
                       padding: "8px 18px",
                       borderRadius: "100px",
-                      fontSize: "0.84rem",
-                      fontWeight: 800,
+                      fontSize: "0.82rem",
+                      fontWeight: 550,
                       fontFamily: "var(--font-display)",
                       letterSpacing: "0.04em",
                       textTransform: "uppercase",
@@ -306,7 +324,7 @@ export default function Navbar() {
                 WebkitBackdropFilter: "blur(20px)",
                 color: isScrolled ? "#2C2727" : "#FFFFFF",
                 fontSize: "0.82rem",
-                fontWeight: 900,
+                fontWeight: 600,
                 fontFamily: "var(--font-display)",
                 letterSpacing: "0.04em",
                 textTransform: "uppercase",
@@ -339,7 +357,7 @@ export default function Navbar() {
                   : "#FFFFFF",
                 color: isScrolled ? "#FFFFFF" : "#FF5500",
                 fontSize: "0.84rem",
-                fontWeight: 900,
+                fontWeight: 650,
                 fontFamily: "var(--font-display)",
                 letterSpacing: "0.05em",
                 textTransform: "uppercase",
@@ -502,7 +520,7 @@ export default function Navbar() {
                       color: isActive ? "#FFFFFF" : "#2C2727",
                       textDecoration: "none",
                       fontFamily: "var(--font-display)",
-                      fontWeight: 850,
+                      fontWeight: 600,
                       fontSize: "0.92rem",
                       textTransform: "uppercase",
                       letterSpacing: "0.04em",
@@ -651,7 +669,7 @@ export default function Navbar() {
                 <span
                   style={{
                     fontSize: "0.68rem",
-                    fontWeight: isActive ? 900 : 700,
+                    fontWeight: isActive ? 650 : 500,
                     fontFamily: "var(--font-display)",
                     letterSpacing: "0.03em",
                     textTransform: "uppercase",

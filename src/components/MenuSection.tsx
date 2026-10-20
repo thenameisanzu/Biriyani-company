@@ -113,7 +113,7 @@ interface MenuSectionProps {
   onAddToTray: (item: MenuItemType) => void;
 }
 
-export default function MenuSection({ onAddToTray }: MenuSectionProps) {
+function MenuSection({ onAddToTray }: MenuSectionProps) {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [selectedPortions, setSelectedPortions] = useState<{ [dishId: string]: number }>({
     "chicken-dum-biryani": 1,
@@ -167,7 +167,7 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
       id="menu"
       style={{
         padding: "110px 0 100px",
-        background: "#FFFFFF",
+        background: "transparent",
         color: "#2C2727",
         position: "relative",
       }}
@@ -297,6 +297,7 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
         {/* 2. LIQUID GLASS FLOATING CATEGORY FILTER BAR                 */}
         {/* ============================================================ */}
         <motion.div
+          className="menu-category-bar"
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           whileInView={{ opacity: 1, scale: 1, y: 0 }}
           viewport={{ once: false, amount: 0.4 }}
@@ -310,12 +311,12 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
             gap: "6px",
             padding: "6px 8px",
             borderRadius: "100px",
-            background: "rgba(255, 255, 255, 0.88)",
-            backdropFilter: "blur(28px) saturate(210%)",
-            WebkitBackdropFilter: "blur(28px) saturate(210%)",
-            border: "1.5px solid rgba(255, 255, 255, 0.95)",
+            background: "rgba(255, 255, 255, 0.42)",
+            backdropFilter: "blur(32px) saturate(210%)",
+            WebkitBackdropFilter: "blur(32px) saturate(210%)",
+            border: "1.5px solid rgba(255, 255, 255, 0.7)",
             boxShadow:
-              "0 12px 35px rgba(0, 0, 0, 0.08), inset 0 1px 2px #FFFFFF",
+              "0 14px 40px rgba(0, 0, 0, 0.1), inset 0 1.5px 2px rgba(255, 255, 255, 0.9)",
             flexWrap: "wrap",
             marginBottom: "40px",
           }}
@@ -404,20 +405,21 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
                   top: `calc(130px + ${idx * 22}px)`,
                   zIndex: idx + 2,
                   marginBottom: idx === filteredDishes.length - 1 ? "40px" : "80px",
-                  // THE LIQUID GLASS STACKED CARD
+                  // THE APPLE LIQUID GLASS STACKED CARD
                   background:
-                    "linear-gradient(145deg, rgba(255, 255, 255, 0.96) 0%, rgba(252, 250, 248, 0.92) 100%)",
-                  backdropFilter: "blur(36px) saturate(220%)",
-                  WebkitBackdropFilter: "blur(36px) saturate(220%)",
+                    "linear-gradient(135deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.18) 100%)",
+                  backdropFilter: "blur(32px) saturate(210%)",
+                  WebkitBackdropFilter: "blur(32px) saturate(210%)",
                   borderRadius: "32px",
                   padding: "32px 36px",
-                  border: "1.5px solid rgba(255, 255, 255, 0.95)",
-                  boxShadow: `0 -4px 20px rgba(0, 0, 0, 0.02), 0 24px 60px rgba(0, 0, 0, 0.08), inset 0 1px 2px #FFFFFF, 0 0 0 1px rgba(44, 39, 39, 0.08)`,
+                  border: "1.5px solid rgba(255, 255, 255, 0.65)",
+                  boxShadow: `0 25px 60px rgba(0, 0, 0, 0.12), inset 0 1.5px 2px rgba(255, 255, 255, 0.85), inset 0 -1px 1px rgba(0, 0, 0, 0.04)`,
                 }}
                 className="stacking-menu-card"
               >
                 {/* Card Top Row: Number, Pop-in Name, Tag, Price */}
                 <div
+                  className="menu-card-top-row"
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -598,19 +600,19 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
                               ? dish.isVeg
                                 ? "linear-gradient(135deg, #1B9C52 0%, #157A40 100%)"
                                 : "linear-gradient(135deg, #FF6F00 0%, #FF5500 50%, #FF3D00 100%)"
-                              : "rgba(255, 255, 255, 0.8)",
+                              : "rgba(255, 255, 255, 0.32)",
                             backdropFilter: "blur(16px)",
                             color: isChosen ? "#FFFFFF" : "#2C2727",
                             border: isChosen
                               ? "1.5px solid rgba(255, 255, 255, 0.6)"
-                              : "1.2px solid rgba(44, 39, 39, 0.14)",
+                              : "1.2px solid rgba(255, 255, 255, 0.55)",
                             boxShadow: isChosen
                               ? `0 8px 24px ${
                                   dish.isVeg
                                     ? "rgba(27, 156, 82, 0.4)"
                                     : "rgba(255, 85, 0, 0.4)"
                                 }, inset 0 1px 1px rgba(255, 255, 255, 0.6)`
-                              : "0 4px 14px rgba(0, 0, 0, 0.04), inset 0 1px 1px #FFFFFF",
+                              : "0 4px 14px rgba(0, 0, 0, 0.05), inset 0 1px 1.5px rgba(255, 255, 255, 0.8)",
                             fontSize: "0.82rem",
                             fontWeight: 800,
                             fontFamily: "var(--font-display)",
@@ -637,6 +639,7 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
 
                 {/* Actions: Add to Tray + WhatsApp Direct + Swiggy + Zomato */}
                 <div
+                  className="menu-actions-row"
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -848,22 +851,75 @@ export default function MenuSection({ onAddToTray }: MenuSectionProps) {
         </motion.div>
       </div>
 
-      {/* Responsive Breakpoints */}
+      {/* 100% Mobile & iPad Responsive Engine */}
       <style jsx global>{`
         @media (max-width: 768px) {
           #menu {
-            padding: 80px 0 60px !important;
+            padding: 50px 0 80px !important;
           }
           .stacking-menu-card {
-            padding: 22px 18px !important;
+            position: relative !important;
+            top: auto !important;
+            margin-bottom: 22px !important;
+            padding: 20px 16px !important;
             border-radius: 24px !important;
+          }
+          .menu-category-bar {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            white-space: nowrap !important;
+            flex-wrap: nowrap !important;
+            scrollbar-width: none !important;
+            -webkit-overflow-scrolling: touch !important;
+            padding: 5px 6px !important;
+            top: 70px !important;
+            margin-bottom: 24px !important;
+          }
+          .menu-category-bar::-webkit-scrollbar {
+            display: none !important;
+          }
+          .menu-card-top-row {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 10px !important;
+            margin-bottom: 12px !important;
+            padding-bottom: 12px !important;
+          }
+          .menu-actions-row {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 10px !important;
+          }
+          .menu-actions-row > button,
+          .menu-actions-row > a {
+            width: 100% !important;
+            justify-content: center !important;
+            padding: 11px 18px !important;
           }
           .liquid-menu-footer {
             flex-direction: column !important;
-            align-items: flex-start !important;
+            align-items: center !important;
+            text-align: center !important;
+            gap: 16px !important;
+            padding: 24px 18px !important;
+          }
+        }
+        @media (min-width: 769px) and (max-width: 1024px) {
+          #menu {
+            padding: 70px 0 90px !important;
+          }
+          .stacking-menu-card {
+            padding: 28px 24px !important;
+            border-radius: 28px !important;
+          }
+          .menu-category-bar {
+            top: 78px !important;
           }
         }
       `}</style>
     </section>
   );
 }
+
+const MemoizedMenuSection = React.memo(MenuSection);
+export default MemoizedMenuSection;

@@ -403,6 +403,7 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                   // STICKY STACKING ENGINE
                   position: "sticky",
                   top: `calc(130px + ${idx * 22}px)`,
+                  ["--card-top" as any]: `calc(68px + ${idx * 14}px)`,
                   zIndex: idx + 2,
                   marginBottom: idx === filteredDishes.length - 1 ? "40px" : "80px",
                   // THE APPLE LIQUID GLASS STACKED CARD
@@ -858,10 +859,10 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
             padding: 50px 0 80px !important;
           }
           .stacking-menu-card {
-            position: relative !important;
-            top: auto !important;
-            margin-bottom: 22px !important;
-            padding: 20px 16px !important;
+            position: sticky !important;
+            top: var(--card-top, 68px) !important;
+            margin-bottom: 44px !important;
+            padding: 22px 18px !important;
             border-radius: 24px !important;
           }
           .menu-category-bar {

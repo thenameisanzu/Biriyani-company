@@ -214,7 +214,7 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
             gap: "24px",
             marginBottom: "36px",
             paddingBottom: "24px",
-            borderBottom: "1.5px solid rgba(44, 39, 39, 0.09)",
+            borderBottom: "1.5px solid rgba(255, 255, 255, 0.16)",
           }}
         >
           <div>
@@ -230,15 +230,17 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                 gap: "8px",
                 padding: "6px 14px",
                 borderRadius: "100px",
-                background: "rgba(255, 85, 0, 0.08)",
-                backdropFilter: "blur(12px)",
-                border: "1px solid rgba(255, 85, 0, 0.22)",
+                background: "rgba(255, 117, 23, 0.18)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                border: "1px solid rgba(255, 140, 56, 0.45)",
                 fontSize: "0.75rem",
                 fontWeight: 900,
-                color: "#FF5500",
+                color: "#FFA04D",
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
                 marginBottom: "12px",
+                boxShadow: "0 4px 16px rgba(0, 0, 0, 0.2)",
               }}
             >
               <Sparkles size={12} />
@@ -263,8 +265,9 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                 lineHeight: 0.95,
                 letterSpacing: "-0.035em",
                 textTransform: "uppercase",
-                color: "#2C2727",
+                color: "#FFFFFF",
                 margin: 0,
+                textShadow: "0 8px 30px rgba(0, 0, 0, 0.7)",
               }}
             >
               ORDER YOUR BUCKET
@@ -282,9 +285,10 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
             <p
               style={{
                 fontSize: "0.98rem",
-                color: "#6B6565",
+                color: "rgba(255, 255, 255, 0.88)",
                 lineHeight: 1.6,
                 margin: 0,
+                textShadow: "0 2px 12px rgba(0, 0, 0, 0.6)",
               }}
             >
               Scroll through our signature hardwood coal dum roster. Sealed piping
@@ -311,12 +315,12 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
             gap: "6px",
             padding: "6px 8px",
             borderRadius: "100px",
-            background: "rgba(255, 255, 255, 0.42)",
+            background: "rgba(22, 18, 18, 0.68)",
             backdropFilter: "blur(32px) saturate(210%)",
             WebkitBackdropFilter: "blur(32px) saturate(210%)",
-            border: "1.5px solid rgba(255, 255, 255, 0.7)",
+            border: "1.5px solid rgba(255, 255, 255, 0.22)",
             boxShadow:
-              "0 14px 40px rgba(0, 0, 0, 0.1), inset 0 1.5px 2px rgba(255, 255, 255, 0.9)",
+              "0 14px 40px rgba(0, 0, 0, 0.35), inset 0 1.5px 2px rgba(255, 255, 255, 0.16)",
             flexWrap: "wrap",
             marginBottom: "40px",
           }}
@@ -339,12 +343,13 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                   padding: "8px 20px",
                   borderRadius: "100px",
                   background: isSelected
-                    ? "linear-gradient(135deg, #2C2727 0%, #1A1717 100%)"
+                    ? "linear-gradient(135deg, #FF5500 0%, #D44400 100%)"
                     : "transparent",
-                  color: isSelected ? "#FFFFFF" : "#595353",
+                  color: isSelected ? "#FFFFFF" : "rgba(255, 255, 255, 0.78)",
                   border: isSelected
-                    ? "1.5px solid #2C2727"
+                    ? "1.5px solid rgba(255, 255, 255, 0.45)"
                     : "1px solid transparent",
+                  boxShadow: isSelected ? "0 6px 20px rgba(255, 85, 0, 0.4)" : "none",
                   fontSize: "0.82rem",
                   fontWeight: 850,
                   fontFamily: "var(--font-display)",
@@ -362,10 +367,11 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                 <span
                   style={{
                     fontSize: "0.7rem",
-                    opacity: isSelected ? 0.95 : 0.65,
+                    opacity: isSelected ? 0.95 : 0.75,
                     background: isSelected
-                      ? "rgba(255, 255, 255, 0.22)"
-                      : "rgba(44, 39, 39, 0.08)",
+                      ? "rgba(255, 255, 255, 0.25)"
+                      : "rgba(255, 255, 255, 0.14)",
+                    color: isSelected ? "#FFFFFF" : "rgba(255, 255, 255, 0.9)",
                     padding: "2px 7px",
                     borderRadius: "10px",
                     fontWeight: 900,
@@ -408,13 +414,13 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                   marginBottom: idx === filteredDishes.length - 1 ? "40px" : "80px",
                   // THE APPLE LIQUID GLASS STACKED CARD
                   background:
-                    "linear-gradient(135deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.18) 100%)",
+                    "linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.58) 100%)",
                   backdropFilter: "blur(32px) saturate(210%)",
                   WebkitBackdropFilter: "blur(32px) saturate(210%)",
                   borderRadius: "32px",
                   padding: "32px 36px",
-                  border: "1.5px solid rgba(255, 255, 255, 0.65)",
-                  boxShadow: `0 25px 60px rgba(0, 0, 0, 0.12), inset 0 1.5px 2px rgba(255, 255, 255, 0.85), inset 0 -1px 1px rgba(0, 0, 0, 0.04)`,
+                  border: "1.5px solid rgba(255, 255, 255, 0.78)",
+                  boxShadow: `0 25px 60px rgba(0, 0, 0, 0.2), inset 0 1.5px 2px rgba(255, 255, 255, 0.9), inset 0 -1px 1px rgba(0, 0, 0, 0.04)`,
                 }}
                 className="stacking-menu-card"
               >

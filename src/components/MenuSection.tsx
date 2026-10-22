@@ -583,6 +583,7 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                   </div>
 
                   <div
+                    className="menu-portions-container"
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -596,6 +597,7 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                       return (
                         <motion.button
                           key={portion.shortLabel}
+                          className="menu-portion-btn"
                           onClick={() => handleSelectPortion(dish.id, pIdx)}
                           whileHover={{ scale: 1.04 }}
                           whileTap={{ scale: 0.96 }}
@@ -628,7 +630,8 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                             transition: "all 0.15s ease",
                           }}
                         >
-                          <span>{portion.label}</span>
+                          <span className="desktop-portion-text">{portion.label}</span>
+                          <span className="mobile-portion-text">{portion.shortLabel}</span>
                           <span
                             style={{
                               marginLeft: "6px",
@@ -644,7 +647,7 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                   </div>
                 </div>
 
-                {/* Actions: Add to Tray + WhatsApp Direct + Swiggy + Zomato */}
+                {/* Actions: Add to Tray (Primary) + WhatsApp & Delivery (Secondary) */}
                 <div
                   className="menu-actions-row"
                   style={{
@@ -656,6 +659,7 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                 >
                   {/* Primary Add to Tray */}
                   <motion.button
+                    className="menu-action-add-btn"
                     onClick={() => handleAdd(dish, chosenPortion)}
                     whileHover={{ scale: 1.03, y: -1 }}
                     whileTap={{ scale: 0.96 }}
@@ -700,88 +704,105 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                     )}
                   </motion.button>
 
-                  {/* 1-Click WhatsApp Quick Order for this Dish */}
-                  <motion.a
-                    href={`https://wa.me/918089080342?text=${encodeURIComponent(
-                      `🔥 *ORDER - the BIRYANI CO. (Kanjikuzhi, Kottayam)*\n• 1x *${dish.name}* (${chosenPortion.label}) - ₹${chosenPortion.price}\n\nPlease confirm availability and preparation time. Thank you!`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.03, y: -1 }}
-                    whileTap={{ scale: 0.96 }}
+                  {/* Secondary Quick Delivery & Order Bar */}
+                  <div
+                    className="menu-secondary-actions"
                     style={{
-                      fontSize: "0.84rem",
-                      fontWeight: 900,
-                      color: "#FFFFFF",
-                      display: "inline-flex",
+                      display: "flex",
                       alignItems: "center",
-                      gap: "7px",
-                      textDecoration: "none",
-                      padding: "11px 22px",
-                      borderRadius: "100px",
-                      background: "linear-gradient(135deg, #25D366 0%, #1EBE5B 100%)",
-                      boxShadow:
-                        "0 8px 20px rgba(37, 211, 102, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4)",
-                      border: "1px solid rgba(255, 255, 255, 0.3)",
+                      gap: "10px",
+                      flexWrap: "wrap",
                     }}
                   >
-                    <WhatsAppIcon size={17} color="#FFFFFF" />
-                    <span>WhatsApp Order</span>
-                  </motion.a>
+                    {/* 1-Click WhatsApp Quick Order for this Dish */}
+                    <motion.a
+                      className="menu-action-wa"
+                      href={`https://wa.me/918089080342?text=${encodeURIComponent(
+                        `🔥 *ORDER - the BIRYANI CO. (Kanjikuzhi, Kottayam)*\n• 1x *${dish.name}* (${chosenPortion.label}) - ₹${chosenPortion.price}\n\nPlease confirm availability and preparation time. Thank you!`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.03, y: -1 }}
+                      whileTap={{ scale: 0.96 }}
+                      style={{
+                        fontSize: "0.84rem",
+                        fontWeight: 900,
+                        color: "#FFFFFF",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "7px",
+                        textDecoration: "none",
+                        padding: "11px 22px",
+                        borderRadius: "100px",
+                        background: "linear-gradient(135deg, #25D366 0%, #1EBE5B 100%)",
+                        boxShadow:
+                          "0 8px 20px rgba(37, 211, 102, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4)",
+                        border: "1px solid rgba(255, 255, 255, 0.3)",
+                      }}
+                    >
+                      <WhatsAppIcon size={17} color="#FFFFFF" />
+                      <span className="desktop-btn-text">WhatsApp Order</span>
+                      <span className="mobile-btn-text">WhatsApp</span>
+                    </motion.a>
 
-                  {/* Liquid Frosted Swiggy Link */}
-                  <motion.a
-                    href="https://www.swiggy.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.03, y: -1 }}
-                    whileTap={{ scale: 0.96 }}
-                    style={{
-                      fontSize: "0.82rem",
-                      fontWeight: 800,
-                      color: "#FC8019",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "5px",
-                      textDecoration: "none",
-                      padding: "10px 18px",
-                      borderRadius: "100px",
-                      background: "rgba(255, 244, 237, 0.8)",
-                      backdropFilter: "blur(16px)",
-                      border: "1.5px solid rgba(252, 128, 25, 0.35)",
-                      boxShadow: "0 4px 14px rgba(252, 128, 25, 0.12)",
-                    }}
-                  >
-                    <span>Order on Swiggy</span>
-                    <ArrowUpRight size={13} />
-                  </motion.a>
+                    {/* Liquid Frosted Swiggy Link */}
+                    <motion.a
+                      className="menu-action-swiggy"
+                      href="https://www.swiggy.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.03, y: -1 }}
+                      whileTap={{ scale: 0.96 }}
+                      style={{
+                        fontSize: "0.82rem",
+                        fontWeight: 800,
+                        color: "#FC8019",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "5px",
+                        textDecoration: "none",
+                        padding: "10px 18px",
+                        borderRadius: "100px",
+                        background: "rgba(255, 244, 237, 0.8)",
+                        backdropFilter: "blur(16px)",
+                        border: "1.5px solid rgba(252, 128, 25, 0.35)",
+                        boxShadow: "0 4px 14px rgba(252, 128, 25, 0.12)",
+                      }}
+                    >
+                      <span className="desktop-btn-text">Order on Swiggy</span>
+                      <span className="mobile-btn-text">Swiggy</span>
+                      <ArrowUpRight size={13} />
+                    </motion.a>
 
-                  {/* Liquid Frosted Zomato Link */}
-                  <motion.a
-                    href="https://www.zomato.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.03, y: -1 }}
-                    whileTap={{ scale: 0.96 }}
-                    style={{
-                      fontSize: "0.82rem",
-                      fontWeight: 800,
-                      color: "#E23744",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "5px",
-                      textDecoration: "none",
-                      padding: "10px 18px",
-                      borderRadius: "100px",
-                      background: "rgba(255, 241, 242, 0.8)",
-                      backdropFilter: "blur(16px)",
-                      border: "1.5px solid rgba(226, 55, 68, 0.35)",
-                      boxShadow: "0 4px 14px rgba(226, 55, 68, 0.12)",
-                    }}
-                  >
-                    <span>Order on Zomato</span>
-                    <ArrowUpRight size={13} />
-                  </motion.a>
+                    {/* Liquid Frosted Zomato Link */}
+                    <motion.a
+                      className="menu-action-zomato"
+                      href="https://www.zomato.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.03, y: -1 }}
+                      whileTap={{ scale: 0.96 }}
+                      style={{
+                        fontSize: "0.82rem",
+                        fontWeight: 800,
+                        color: "#E23744",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "5px",
+                        textDecoration: "none",
+                        padding: "10px 18px",
+                        borderRadius: "100px",
+                        background: "rgba(255, 241, 242, 0.8)",
+                        backdropFilter: "blur(16px)",
+                        border: "1.5px solid rgba(226, 55, 68, 0.35)",
+                        boxShadow: "0 4px 14px rgba(226, 55, 68, 0.12)",
+                      }}
+                    >
+                      <span className="desktop-btn-text">Order on Zomato</span>
+                      <span className="mobile-btn-text">Zomato</span>
+                      <ArrowUpRight size={13} />
+                    </motion.a>
+                  </div>
                 </div>
               </motion.div>
             );
@@ -860,48 +881,99 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
 
       {/* 100% Mobile & iPad Responsive Engine */}
       <style jsx global>{`
+        .mobile-portion-text,
+        .mobile-btn-text {
+          display: none;
+        }
         @media (max-width: 768px) {
-          #menu {
-            padding: 50px 0 80px !important;
+          .desktop-portion-text,
+          .desktop-btn-text {
+            display: none !important;
           }
+          .mobile-portion-text,
+          .mobile-btn-text {
+            display: inline !important;
+          }
+          #menu {
+            padding: 40px 0 80px !important;
+          }
+          /* On mobile, cards flow naturally with beautiful breathing room instead of cramped stacking */
           .stacking-menu-card {
-            position: sticky !important;
-            top: var(--card-top, 68px) !important;
-            margin-bottom: 44px !important;
-            padding: 22px 18px !important;
+            position: relative !important;
+            top: auto !important;
+            margin-bottom: 22px !important;
+            padding: 20px 16px !important;
             border-radius: 24px !important;
           }
           .menu-category-bar {
-            max-width: 100% !important;
+            display: flex !important;
+            flex-wrap: nowrap !important;
             overflow-x: auto !important;
             white-space: nowrap !important;
-            flex-wrap: nowrap !important;
             scrollbar-width: none !important;
             -webkit-overflow-scrolling: touch !important;
-            padding: 5px 6px !important;
-            top: 70px !important;
-            margin-bottom: 24px !important;
+            width: max-content !important;
+            max-width: calc(100vw - 32px) !important;
+            margin: 0 auto 22px auto !important;
+            padding: 5px 8px !important;
+            top: 66px !important;
+            background: rgba(18, 14, 14, 0.88) !important;
+            backdrop-filter: blur(28px) saturate(210%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(210%) !important;
           }
           .menu-category-bar::-webkit-scrollbar {
             display: none !important;
           }
+          .menu-category-bar button {
+            flex-shrink: 0 !important;
+            padding: 7px 14px !important;
+            font-size: 0.78rem !important;
+          }
           .menu-card-top-row {
-            flex-direction: column !important;
+            flex-direction: row !important;
+            justify-content: space-between !important;
             align-items: flex-start !important;
-            gap: 10px !important;
+            gap: 12px !important;
             margin-bottom: 12px !important;
             padding-bottom: 12px !important;
           }
+          .menu-portions-container {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 6px !important;
+          }
+          .menu-portion-btn {
+            padding: 7px 12px !important;
+            font-size: 0.76rem !important;
+            border-radius: 100px !important;
+          }
           .menu-actions-row {
+            display: flex !important;
             flex-direction: column !important;
             align-items: stretch !important;
-            gap: 10px !important;
+            gap: 8px !important;
+            width: 100% !important;
           }
-          .menu-actions-row > button,
-          .menu-actions-row > a {
+          .menu-action-add-btn {
             width: 100% !important;
             justify-content: center !important;
-            padding: 11px 18px !important;
+            padding: 13px 18px !important;
+            font-size: 0.86rem !important;
+          }
+          .menu-secondary-actions {
+            display: grid !important;
+            grid-template-columns: 1.25fr 1fr 1fr !important;
+            gap: 7px !important;
+            width: 100% !important;
+          }
+          .menu-action-wa,
+          .menu-action-swiggy,
+          .menu-action-zomato {
+            width: 100% !important;
+            justify-content: center !important;
+            padding: 10px 6px !important;
+            font-size: 0.74rem !important;
+            white-space: nowrap !important;
           }
           .liquid-menu-footer {
             flex-direction: column !important;

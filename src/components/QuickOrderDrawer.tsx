@@ -132,7 +132,12 @@ export default function QuickOrderDrawer({
         </motion.a>
 
         <style jsx global>{`
-          @media (max-width: 1024px) {
+          @media (max-width: 768px) {
+            .order-drawer-container {
+              display: none !important;
+            }
+          }
+          @media (min-width: 769px) and (max-width: 1024px) {
             .order-drawer-container {
               bottom: calc(82px + env(safe-area-inset-bottom, 0px)) !important;
             }

@@ -385,9 +385,10 @@ export default function Navbar() {
               gap: "8px",
             }}
           >
-            {/* Phone Quick Pill */}
+            {/* Phone Quick Pill (Visible on iPad/Tablet, hidden on mobile phone to avoid duplication with bottom dock) */}
             <a
               href="tel:8089080342"
+              className="mobile-header-call-pill"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -711,6 +712,13 @@ export default function Navbar() {
           }
           body {
             padding-bottom: 90px !important;
+          }
+        }
+
+        /* Mobile phones: <= 600px */
+        @media (max-width: 600px) {
+          .mobile-header-call-pill {
+            display: none !important;
           }
         }
       `}</style>

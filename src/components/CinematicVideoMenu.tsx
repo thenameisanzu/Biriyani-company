@@ -655,8 +655,7 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
             padding: 12px 20px !important;
           }
           .cinema-watch-btn-floating {
-            bottom: calc(84px + env(safe-area-inset-bottom, 0px)) !important;
-            right: 16px !important;
+            display: none !important;
           }
         }
 

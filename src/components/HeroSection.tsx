@@ -134,6 +134,7 @@ export default function HeroSection() {
 
             {/* Giant Clean Headline */}
             <motion.h1
+              className="hero-main-title"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1 }}
@@ -155,6 +156,7 @@ export default function HeroSection() {
 
             {/* Clean Minimalist Subtitle */}
             <motion.p
+              className="hero-subtext"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -172,6 +174,7 @@ export default function HeroSection() {
 
             {/* Minimalist Action Buttons */}
             <motion.div
+              className="hero-cta-group"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
@@ -184,6 +187,7 @@ export default function HeroSection() {
             >
               <a
                 href="#menu"
+                className="hero-cta-btn-primary"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -215,6 +219,7 @@ export default function HeroSection() {
 
               <a
                 href="#menu"
+                className="hero-cta-btn-secondary"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -260,6 +265,7 @@ export default function HeroSection() {
           >
             {/* Floating Bowl Container with Subtle 3D Mouse Parallax */}
             <motion.div
+              className="hero-bowl-wrapper"
               style={{
                 rotateX,
                 rotateY,
@@ -412,13 +418,13 @@ export default function HeroSection() {
       <style jsx global>{`
         @media (max-width: 1024px) {
           #hero {
-            padding-top: 110px !important;
-            padding-bottom: 60px !important;
+            padding-top: 100px !important;
+            padding-bottom: 50px !important;
           }
           .hero-minimal-grid {
             grid-template-columns: 1fr !important;
             text-align: center;
-            gap: 40px !important;
+            gap: 32px !important;
           }
           .hero-minimal-grid > div:first-child {
             display: flex;
@@ -428,27 +434,50 @@ export default function HeroSection() {
         }
         @media (max-width: 600px) {
           #hero {
-            padding-top: 96px !important;
-            padding-bottom: 45px !important;
+            padding-top: 86px !important;
+            padding-bottom: 36px !important;
+            min-height: auto !important;
+          }
+          .hero-main-title {
+            font-size: clamp(2.35rem, 8.8vw, 3.2rem) !important;
+            line-height: 1.0 !important;
+            margin-bottom: 14px !important;
+            letter-spacing: -0.03em !important;
+          }
+          .hero-subtext {
+            font-size: 0.94rem !important;
+            line-height: 1.55 !important;
+            max-width: 320px !important;
+            margin-bottom: 22px !important;
+          }
+          .hero-cta-group {
+            gap: 10px !important;
+            justify-content: center !important;
+          }
+          .hero-cta-btn-primary {
+            padding: 13px 26px !important;
+            font-size: 0.88rem !important;
+          }
+          .hero-cta-btn-secondary {
+            padding: 13px 22px !important;
+            font-size: 0.85rem !important;
           }
           .hero-minimal-grid {
-            gap: 28px !important;
+            gap: 24px !important;
           }
-          .hero-floating-glass-badge.left-badge {
-            left: 0px !important;
-            top: 5% !important;
-            padding: 6px 12px !important;
-            font-size: 0.7rem !important;
+          .hero-bowl-wrapper {
+            max-width: 250px !important;
+            max-height: 250px !important;
+            margin: 0 auto !important;
           }
+          /* Hide side badges on mobile so bowl is clean and uncluttered */
+          .hero-floating-glass-badge.left-badge,
           .hero-floating-glass-badge.right-badge {
-            right: 0px !important;
-            top: 5% !important;
-            padding: 6px 12px !important;
-            font-size: 0.7rem !important;
+            display: none !important;
           }
           .hero-bowl-bottom-pill {
-            padding: 8px 16px !important;
-            font-size: 0.74rem !important;
+            padding: 7px 16px !important;
+            font-size: 0.72rem !important;
             bottom: -10px !important;
           }
         }

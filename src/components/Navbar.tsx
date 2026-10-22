@@ -38,6 +38,17 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dockRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<{ [key: string]: HTMLAnchorElement | null }>({});
+  const isUserInteractingRef = useRef(false);
+  const interactionTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const lastActiveTabRef = useRef<string>("hero");
+
+  const lockScrollTracking = (duration = 900) => {
+    isUserInteractingRef.current = true;
+    if (interactionTimerRef.current) clearTimeout(interactionTimerRef.current);
+    interactionTimerRef.current = setTimeout(() => {
+      isUserInteractingRef.current = false;
+    }, duration);
+  };
 
   // Detect scroll state and active section (Throttled with rAF & state guards to prevent scroll jank)
   useEffect(() => {
@@ -52,6 +63,12 @@ export default function Navbar() {
         setIsScrolled(scrolled);
       }
 
+      // Do NOT fight user if they are currently tapping or sliding on the dock
+      if (isUserInteractingRef.current) {
+        ticking = false;
+        return;
+      }
+
       const sections = ["location", "delivery", "menu", "hero"];
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
@@ -61,6 +78,7 @@ export default function Navbar() {
             if (sectionId !== currentTab) {
               currentTab = sectionId;
               setActiveTab(sectionId);
+              lastActiveTabRef.current = sectionId;
             }
             break;
           }
@@ -81,36 +99,93 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Slide / Touch gesture on the bottom dock
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (!dockRef.current || e.touches.length === 0) return;
-    const touchX = e.touches[0].clientX;
-
-    // Check which item the touch is currently over
-    for (const item of navItems) {
-      const el = itemRefs.current[item.id];
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        if (touchX >= rect.left && touchX <= rect.right) {
-          if (activeTab !== item.id) {
-            setActiveTab(item.id);
-          }
-          break;
-        }
-      }
-    }
-  };
-
-  const handleTabClick = (e: React.MouseEvent<HTMLAnchorElement>, item: NavItem) => {
+  // Navigate smoothly to target tab
+  const navigateToTab = (item: NavItem) => {
     setActiveTab(item.id);
+    lastActiveTabRef.current = item.id;
+    lockScrollTracking(1000);
     setMobileMenuOpen(false);
+
     if (item.href.startsWith("#")) {
-      e.preventDefault();
       const target = document.querySelector(item.href);
       if (target) {
         target.scrollIntoView({ behavior: "smooth" });
       }
+    } else {
+      window.location.href = item.href;
     }
+  };
+
+  // Calculate which tab is under touch coordinates (with generous snap detection)
+  const getTabUnderTouch = (clientX: number): NavItem | null => {
+    // 1. Direct bounding box check
+    for (const item of navItems) {
+      const el = itemRefs.current[item.id];
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if (clientX >= rect.left && clientX <= rect.right) {
+          return item;
+        }
+      }
+    }
+    // 2. Nearest center snap check (for fluid dragging past edges)
+    let closestItem: NavItem | null = null;
+    let minDist = Infinity;
+    for (const item of navItems) {
+      const el = itemRefs.current[item.id];
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        const center = rect.left + rect.width / 2;
+        const dist = Math.abs(clientX - center);
+        if (dist < minDist) {
+          minDist = dist;
+          closestItem = item;
+        }
+      }
+    }
+    return closestItem;
+  };
+
+  // Instant touch start response
+  const handleDockTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length === 0) return;
+    lockScrollTracking(1200);
+    const item = getTabUnderTouch(e.touches[0].clientX);
+    if (item) {
+      setActiveTab(item.id);
+      lastActiveTabRef.current = item.id;
+      if (typeof navigator !== "undefined" && navigator.vibrate) {
+        navigator.vibrate(8);
+      }
+    }
+  };
+
+  // Continuous fluid sliding gesture response
+  const handleDockTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length === 0) return;
+    lockScrollTracking(1200);
+    const item = getTabUnderTouch(e.touches[0].clientX);
+    if (item && item.id !== lastActiveTabRef.current) {
+      setActiveTab(item.id);
+      lastActiveTabRef.current = item.id;
+      if (typeof navigator !== "undefined" && navigator.vibrate) {
+        navigator.vibrate(6);
+      }
+    }
+  };
+
+  // Release and commit navigation on finger lift
+  const handleDockTouchEnd = () => {
+    const finalItem = navItems.find((i) => i.id === lastActiveTabRef.current);
+    if (finalItem) {
+      navigateToTab(finalItem);
+    }
+  };
+
+  // Direct Click/Tap on tab
+  const handleTabClick = (e: React.MouseEvent<HTMLAnchorElement>, item: NavItem) => {
+    e.preventDefault();
+    navigateToTab(item);
   };
 
   return (
@@ -570,28 +645,32 @@ export default function Navbar() {
       >
         <motion.div
           ref={dockRef}
-          onTouchMove={handleTouchMove}
+          onTouchStart={handleDockTouchStart}
+          onTouchMove={handleDockTouchMove}
+          onTouchEnd={handleDockTouchEnd}
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 350, damping: 28 }}
+          transition={{ type: "spring", stiffness: 380, damping: 28 }}
           style={{
             pointerEvents: "auto",
             position: "relative",
             width: "100%",
-            maxWidth: "520px",
-            // THE LIQUID GLASS EFFECT
-            background: "rgba(255, 255, 255, 0.78)",
-            backdropFilter: "blur(32px) saturate(210%)",
-            WebkitBackdropFilter: "blur(32px) saturate(210%)",
-            border: "1.5px solid rgba(255, 255, 255, 0.9)",
+            maxWidth: "500px",
+            // THE ULTRA-LUXURY APPLE LIQUID GLASS EFFECT
+            background: "rgba(255, 255, 255, 0.65)",
+            backdropFilter: "blur(40px) saturate(220%) contrast(104%)",
+            WebkitBackdropFilter: "blur(40px) saturate(220%) contrast(104%)",
+            border: "1.5px solid rgba(255, 255, 255, 0.92)",
             borderRadius: "100px",
-            padding: "6px 8px",
+            padding: "5px 6px",
             boxShadow:
-              "0 20px 50px rgba(0, 0, 0, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 8px 25px rgba(255, 85, 0, 0.12)",
+              "0 24px 60px rgba(0, 0, 0, 0.16), 0 8px 24px rgba(255, 85, 0, 0.1), inset 0 1.5px 2px rgba(255, 255, 255, 0.95), inset 0 -1px 2px rgba(0, 0, 0, 0.04)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            touchAction: "pan-x",
+            touchAction: "none",
+            userSelect: "none",
+            WebkitUserSelect: "none",
           }}
         >
           {navItems.map((item) => {
@@ -606,7 +685,7 @@ export default function Navbar() {
                 }}
                 href={item.href}
                 onClick={(e) => handleTabClick(e, item)}
-                whileTap={{ scale: 0.88 }}
+                whileTap={{ scale: 0.92 }}
                 style={{
                   position: "relative",
                   flex: 1,
@@ -614,7 +693,7 @@ export default function Navbar() {
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                  padding: "9px 4px",
+                  padding: "8px 2px",
                   borderRadius: "100px",
                   textDecoration: "none",
                   cursor: "pointer",
@@ -623,14 +702,15 @@ export default function Navbar() {
                   zIndex: 2,
                 }}
               >
-                {/* Sliding Liquid Active Indicator Pill */}
+                {/* Sliding Liquid Active Indicator Pill with Apple-style Fluid Spring */}
                 {isActive && (
                   <motion.div
                     layoutId="liquid-active-pill"
                     transition={{
                       type: "spring",
-                      stiffness: 450,
-                      damping: 32,
+                      stiffness: 520,
+                      damping: 36,
+                      mass: 0.7,
                     }}
                     style={{
                       position: "absolute",
@@ -639,7 +719,7 @@ export default function Navbar() {
                       background:
                         "linear-gradient(135deg, #FF6F00 0%, #FF5500 50%, #FF3D00 100%)",
                       boxShadow:
-                        "0 8px 22px rgba(255, 85, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.4)",
+                        "0 10px 24px rgba(255, 85, 0, 0.45), inset 0 1.5px 2px rgba(255, 255, 255, 0.6), inset 0 -1.5px 2px rgba(0, 0, 0, 0.16)",
                       zIndex: -1,
                     }}
                   />
@@ -648,20 +728,20 @@ export default function Navbar() {
                 {/* Animated Tab Icon */}
                 <motion.div
                   animate={{
-                    scale: isActive ? 1.08 : 1,
+                    scale: isActive ? 1.15 : 1,
                     y: isActive ? -1 : 0,
                   }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  transition={{ type: "spring", stiffness: 450, damping: 26 }}
                   style={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    marginBottom: "3px",
+                    marginBottom: "2px",
                   }}
                 >
                   <Icon
-                    size={20}
-                    color={isActive ? "#FFFFFF" : "#595353"}
+                    size={19}
+                    color={isActive ? "#FFFFFF" : "#4A4343"}
                     strokeWidth={isActive ? 2.6 : 2.1}
                   />
                 </motion.div>
@@ -669,14 +749,15 @@ export default function Navbar() {
                 {/* Tab Label */}
                 <span
                   style={{
-                    fontSize: "0.68rem",
-                    fontWeight: isActive ? 650 : 500,
+                    fontSize: "0.66rem",
+                    fontWeight: isActive ? 800 : 600,
                     fontFamily: "var(--font-display)",
-                    letterSpacing: "0.03em",
+                    letterSpacing: "0.04em",
                     textTransform: "uppercase",
                     color: isActive ? "#FFFFFF" : "#595353",
                     lineHeight: 1,
-                    transition: "color 0.2s ease",
+                    transition: "color 0.18s ease",
+                    textShadow: isActive ? "0 1px 3px rgba(0, 0, 0, 0.2)" : "none",
                   }}
                 >
                   {item.label}

@@ -215,30 +215,41 @@ export default function DeliverySection() {
                   marginBottom: "36px",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <span
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <div
                     style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "1.8rem",
-                      fontWeight: 950,
-                      letterSpacing: "-0.03em",
-                      color: "#FC8019",
+                      height: "44px",
+                      borderRadius: "12px",
+                      overflow: "hidden",
+                      display: "flex",
+                      alignItems: "center",
+                      boxShadow: "0 6px 18px rgba(252, 128, 25, 0.28)",
+                      background: "#FC8019",
                     }}
                   >
-                    SWIGGY
-                  </span>
+                    <img
+                      src="/images/swiggy-logo.png"
+                      alt="Swiggy Official Delivery Partner"
+                      style={{
+                        height: "100%",
+                        width: "auto",
+                        objectFit: "contain",
+                        display: "block",
+                      }}
+                    />
+                  </div>
                   <span
                     style={{
                       fontSize: "0.72rem",
                       fontWeight: 900,
                       background: "#FFF4ED",
                       color: "#FC8019",
-                      padding: "4px 10px",
+                      padding: "5px 12px",
                       borderRadius: "100px",
                       letterSpacing: "0.08em",
                     }}
                   >
-                    OFFICIAL
+                    OFFICIAL PARTNER
                   </span>
                 </div>
 
@@ -381,25 +392,36 @@ export default function DeliverySection() {
                   marginBottom: "36px",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <span
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <div
                     style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "1.8rem",
-                      fontWeight: 950,
-                      letterSpacing: "-0.03em",
-                      color: "#E23744",
+                      height: "44px",
+                      borderRadius: "12px",
+                      overflow: "hidden",
+                      display: "flex",
+                      alignItems: "center",
+                      boxShadow: "0 6px 18px rgba(226, 55, 68, 0.28)",
+                      background: "#E23744",
                     }}
                   >
-                    ZOMATO
-                  </span>
+                    <img
+                      src="/images/zomato-logo.svg"
+                      alt="Zomato Gold Delivery Partner"
+                      style={{
+                        height: "100%",
+                        width: "auto",
+                        objectFit: "contain",
+                        display: "block",
+                      }}
+                    />
+                  </div>
                   <span
                     style={{
                       fontSize: "0.72rem",
                       fontWeight: 900,
                       background: "#FFF0F1",
                       color: "#E23744",
-                      padding: "4px 10px",
+                      padding: "5px 12px",
                       borderRadius: "100px",
                       letterSpacing: "0.08em",
                     }}

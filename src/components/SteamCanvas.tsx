@@ -45,44 +45,43 @@ export default function SteamCanvas({ className = "" }: { className?: string }) 
 
     let isVisible = true;
     const puffs: SteamPuff[] = [];
-    const maxPuffs = 14; // Subtle, realistic hot steam wisps
+    const maxPuffs = 28; // Rich, appetizing, continuous plumes of hot steam
 
-    // Gentle emitters focused directly over the hot dum rice
+    // Emit plumes directly over the steaming hot biryani bowl
     const spawnPuff = (): SteamPuff => {
-      const isSparkle = Math.random() < 0.08;
-      // Emit tightly from the center handi bowl zone
-      const emitterOffset = (Math.random() - 0.5) * (w * 0.32);
+      const isSparkle = Math.random() < 0.12;
+      const emitterOffset = (Math.random() - 0.5) * (w * 0.36);
       const startX = w * 0.5 + emitterOffset;
-      const startY = h * 0.62 + (Math.random() - 0.5) * 16;
+      const startY = h * 0.66 + (Math.random() - 0.5) * 18;
 
       const maxLife = isSparkle
-        ? 180 + Math.random() * 80
-        : 220 + Math.random() * 140;
+        ? 140 + Math.random() * 60
+        : 180 + Math.random() * 70;
 
       return {
         x: startX,
         y: startY,
         initialX: startX,
-        radius: isSparkle ? Math.random() * 1.5 + 1 : Math.random() * 8 + 8,
-        maxRadius: isSparkle ? 2.5 : Math.random() * 32 + 24,
-        vy: isSparkle ? Math.random() * 0.4 + 0.3 : Math.random() * 0.38 + 0.28, // Gentle, slow lazy waft
-        vx: (Math.random() - 0.5) * 0.2,
+        radius: isSparkle ? Math.random() * 1.8 + 1.2 : Math.random() * 14 + 10,
+        maxRadius: isSparkle ? 3 : Math.random() * 55 + 40,
+        vy: isSparkle ? Math.random() * 0.6 + 0.5 : Math.random() * 0.55 + 0.45, // Appetizing, natural upward waft
+        vx: (Math.random() - 0.5) * 0.25,
         opacity: 0,
-        maxOpacity: isSparkle ? 0.45 : Math.random() * 0.13 + 0.08, // Translucent, soft, natural steam
+        maxOpacity: isSparkle ? 0.75 : Math.random() * 0.22 + 0.32, // Clearly visible white steam against orange
         life: 0,
         maxLife,
         rotation: Math.random() * Math.PI * 2,
-        rotSpeed: (Math.random() - 0.5) * 0.012,
-        swaySpeed: Math.random() * 0.015 + 0.008,
-        swayDist: Math.random() * 12 + 6,
+        rotSpeed: (Math.random() - 0.5) * 0.015,
+        swaySpeed: Math.random() * 0.018 + 0.01,
+        swayDist: Math.random() * 18 + 8,
         type: isSparkle ? "saffronSparkle" : "steam",
       };
     };
 
-    // Pre-populate so gentle steam is visible immediately
+    // Pre-populate so steam is full and active immediately on page load
     for (let i = 0; i < maxPuffs; i++) {
       const p = spawnPuff();
-      p.life = Math.random() * p.maxLife;
+      p.life = Math.floor(Math.random() * p.maxLife * 0.85) + 5;
       p.y -= (p.life * p.vy);
       puffs.push(p);
     }
@@ -93,8 +92,8 @@ export default function SteamCanvas({ className = "" }: { className?: string }) 
       frame++;
       ctx.clearRect(0, 0, w, h);
 
-      // Continuously maintain gentle rising plumes
-      if (puffs.length < maxPuffs) {
+      // Continuously replenish rising steam puffs
+      while (puffs.length < maxPuffs) {
         puffs.push(spawnPuff());
       }
 
@@ -102,29 +101,25 @@ export default function SteamCanvas({ className = "" }: { className?: string }) 
         const p = puffs[i];
         p.life++;
 
-        // Progress fraction (0 to 1)
-        const progress = p.life / p.maxLife;
+        // Natural organic bell-curve opacity (smooth fade-in, rich peak, smooth fade-out)
+        const progress = Math.min(1, p.life / p.maxLife);
+        p.opacity = Math.sin(progress * Math.PI) * p.maxOpacity;
 
-        // Curve opacity: gentle fade-in, smooth dissipation
-        if (progress < 0.25) {
-          p.opacity = (progress / 0.25) * p.maxOpacity;
-        } else {
-          p.opacity = (1 - (progress - 0.25) / 0.75) * p.maxOpacity;
-        }
-
-        // Float upwards with gentle, calming air drift
+        // Float upwards with gentle, calming air turbulence
         p.y -= p.vy;
-        p.x = p.initialX + Math.sin(frame * p.swaySpeed + p.life * 0.02) * p.swayDist + p.vx * p.life;
+        p.x = p.initialX + Math.sin(frame * p.swaySpeed + p.life * 0.025) * p.swayDist + p.vx * p.life;
         p.rotation += p.rotSpeed;
 
         // Disperse and expand as it rises into cooler air
-        const currentRadius = p.radius + (p.maxRadius - p.radius) * Math.pow(progress, 0.75);
+        const currentRadius = p.radius + (p.maxRadius - p.radius) * Math.pow(progress, 0.65);
 
-        // Smoothly fade out before reaching top canvas boundary so there is never an edge artifact
-        const topFade = Math.min(1, Math.max(0, (p.y - h * 0.12) / (h * 0.25)));
-        const finalOpacity = p.opacity * topFade;
+        // Smooth boundary fade so no particle ever clips at the canvas border
+        const topFade = Math.min(1, Math.max(0, p.y / (h * 0.2)));
+        const sideFade = Math.min(1, Math.max(0, p.x / (w * 0.12)), Math.max(0, (w - p.x) / (w * 0.12)));
+        const finalOpacity = Math.max(0, p.opacity * topFade * sideFade);
 
-        if (p.life >= p.maxLife || p.y < -currentRadius || finalOpacity <= 0.001) {
+        // Lifecycle check: ONLY splice when life expires or particle ascends past top
+        if (p.life >= p.maxLife || p.y < -currentRadius) {
           puffs.splice(i, 1);
           continue;
         }
@@ -134,23 +129,23 @@ export default function SteamCanvas({ className = "" }: { className?: string }) 
         ctx.rotate(p.rotation);
 
         if (p.type === "saffronSparkle") {
-          // Delicate floating saffron fleck
+          // Delicate floating saffron / gold ember fleck
           ctx.beginPath();
           ctx.arc(0, 0, p.radius, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 130, 40, ${finalOpacity * 1.2})`;
-          ctx.shadowColor = "#FF8228";
-          ctx.shadowBlur = 6;
+          ctx.fillStyle = `rgba(255, 175, 40, ${finalOpacity})`;
+          ctx.shadowColor = "#FFA800";
+          ctx.shadowBlur = 8;
           ctx.fill();
         } else {
-          // Delicate, soft, translucent steam puff
+          // Luscious, multi-stop radial steam cloud
           const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, currentRadius);
-          grad.addColorStop(0, `rgba(255, 255, 255, ${finalOpacity * 0.85})`);
-          grad.addColorStop(0.35, `rgba(255, 248, 238, ${finalOpacity * 0.45})`);
-          grad.addColorStop(0.7, `rgba(255, 242, 230, ${finalOpacity * 0.12})`);
+          grad.addColorStop(0, `rgba(255, 255, 255, ${finalOpacity * 0.95})`);
+          grad.addColorStop(0.32, `rgba(255, 252, 244, ${finalOpacity * 0.65})`);
+          grad.addColorStop(0.68, `rgba(255, 246, 236, ${finalOpacity * 0.22})`);
           grad.addColorStop(1, "rgba(255, 255, 255, 0)");
 
           ctx.beginPath();
-          ctx.scale(1.1, 0.94);
+          ctx.scale(1.15, 0.92);
           ctx.arc(0, 0, currentRadius, 0, Math.PI * 2);
           ctx.fillStyle = grad;
           ctx.fill();

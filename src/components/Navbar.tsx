@@ -69,12 +69,12 @@ export default function Navbar() {
         return;
       }
 
-      const sections = ["location", "delivery", "menu", "hero"];
+      const sections = ["hero", "menu", "delivery", "location"];
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
         if (el) {
           const rect = el.getBoundingClientRect();
-          if (rect.top <= window.innerHeight * 0.45) {
+          if (rect.top <= window.innerHeight * 0.45 && rect.bottom > window.innerHeight * 0.2) {
             if (sectionId !== currentTab) {
               currentTab = sectionId;
               setActiveTab(sectionId);

@@ -249,14 +249,12 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
 
             {/* HIGH-IMPACT POP-IN TITLE */}
             <motion.h2
-              initial={{ opacity: 0, scale: 0.82, y: 40, filter: "blur(8px)" }}
-              whileInView={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: false, amount: 0.3 }}
+              initial={{ opacity: 0, scale: 0.92, y: 30 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
               transition={{
-                type: "spring",
-                stiffness: 280,
-                damping: 20,
-                mass: 0.8,
+                duration: 0.6,
+                ease: [0.16, 1, 0.3, 1],
               }}
               style={{
                 fontFamily: "var(--font-display)",
@@ -396,14 +394,13 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
             return (
               <motion.div
                 key={dish.id}
-                initial={{ opacity: 0, y: 60, scale: 0.94 }}
+                initial={{ opacity: 0, y: 50, scale: 0.96 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: false, amount: 0.15 }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{
-                  type: "spring",
-                  stiffness: 260,
-                  damping: 24,
-                  delay: idx * 0.04,
+                  duration: 0.5,
+                  ease: [0.16, 1, 0.3, 1],
+                  delay: idx * 0.03,
                 }}
                 style={{
                   // STICKY STACKING ENGINE
@@ -412,15 +409,18 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                   ["--card-top" as any]: `calc(68px + ${idx * 14}px)`,
                   zIndex: idx + 2,
                   marginBottom: idx === filteredDishes.length - 1 ? "40px" : "80px",
-                  // THE APPLE LIQUID GLASS STACKED CARD
+                  // THE APPLE LIQUID GLASS STACKED CARD (Hardware-Accelerated)
                   background:
-                    "linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.58) 100%)",
-                  backdropFilter: "blur(32px) saturate(210%)",
-                  WebkitBackdropFilter: "blur(32px) saturate(210%)",
+                    "linear-gradient(135deg, rgba(255, 255, 255, 0.90) 0%, rgba(255, 255, 255, 0.78) 100%)",
+                  backdropFilter: "blur(20px) saturate(180%)",
+                  WebkitBackdropFilter: "blur(20px) saturate(180%)",
                   borderRadius: "32px",
                   padding: "32px 36px",
-                  border: "1.5px solid rgba(255, 255, 255, 0.78)",
-                  boxShadow: `0 25px 60px rgba(0, 0, 0, 0.2), inset 0 1.5px 2px rgba(255, 255, 255, 0.9), inset 0 -1px 1px rgba(0, 0, 0, 0.04)`,
+                  border: "1.5px solid rgba(255, 255, 255, 0.85)",
+                  boxShadow: `0 25px 60px rgba(0, 0, 0, 0.18), inset 0 1.5px 2px rgba(255, 255, 255, 0.9), inset 0 -1px 1px rgba(0, 0, 0, 0.04)`,
+                  willChange: "transform",
+                  transform: "translateZ(0)",
+                  contain: "paint layout",
                 }}
                 className="stacking-menu-card"
               >
@@ -453,12 +453,12 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
 
                     <div>
                       <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-                        {/* HEADING POP ANIMATION ON SCROLL */}
+                        {/* HEADING ANIMATION ON SCROLL (Pure GPU transform, zero blur filter) */}
                         <motion.h3
-                          initial={{ opacity: 0, scale: 0.88, x: -15, filter: "blur(6px)" }}
-                          whileInView={{ opacity: 1, scale: 1, x: 0, filter: "blur(0px)" }}
-                          viewport={{ once: false, amount: 0.4 }}
-                          transition={{ type: "spring", stiffness: 320, damping: 22 }}
+                          initial={{ opacity: 0, x: -12 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true, amount: 0.2 }}
+                          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                           style={{
                             fontFamily: "var(--font-display)",
                             fontSize: "clamp(1.5rem, 2.8vw, 2.2rem)",
@@ -604,24 +604,23 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                           style={{
                             padding: "9px 20px",
                             borderRadius: "100px",
-                            // LIQUID GLASS PORTION PILL
+                            // PORTION PILL
                             background: isChosen
                               ? dish.isVeg
                                 ? "linear-gradient(135deg, #1B9C52 0%, #157A40 100%)"
                                 : "linear-gradient(135deg, #FF6F00 0%, #FF5500 50%, #FF3D00 100%)"
-                              : "rgba(255, 255, 255, 0.32)",
-                            backdropFilter: "blur(16px)",
+                              : "rgba(44, 39, 39, 0.05)",
                             color: isChosen ? "#FFFFFF" : "#2C2727",
                             border: isChosen
                               ? "1.5px solid rgba(255, 255, 255, 0.6)"
-                              : "1.2px solid rgba(255, 255, 255, 0.55)",
+                              : "1.2px solid rgba(44, 39, 39, 0.12)",
                             boxShadow: isChosen
                               ? `0 8px 24px ${
                                   dish.isVeg
                                     ? "rgba(27, 156, 82, 0.4)"
                                     : "rgba(255, 85, 0, 0.4)"
                                 }, inset 0 1px 1px rgba(255, 255, 255, 0.6)`
-                              : "0 4px 14px rgba(0, 0, 0, 0.05), inset 0 1px 1.5px rgba(255, 255, 255, 0.8)",
+                              : "0 2px 8px rgba(0, 0, 0, 0.04)",
                             fontSize: "0.82rem",
                             fontWeight: 800,
                             fontFamily: "var(--font-display)",
@@ -745,7 +744,7 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                       <span className="mobile-btn-text">WhatsApp</span>
                     </motion.a>
 
-                    {/* Liquid Frosted Swiggy Link */}
+                    {/* Swiggy Link */}
                     <motion.a
                       className="menu-action-swiggy"
                       href="https://www.swiggy.com"
@@ -763,8 +762,7 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                         textDecoration: "none",
                         padding: "10px 18px",
                         borderRadius: "100px",
-                        background: "rgba(255, 244, 237, 0.8)",
-                        backdropFilter: "blur(16px)",
+                        background: "#FFF4ED",
                         border: "1.5px solid rgba(252, 128, 25, 0.35)",
                         boxShadow: "0 4px 14px rgba(252, 128, 25, 0.12)",
                       }}
@@ -774,7 +772,7 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                       <ArrowUpRight size={13} />
                     </motion.a>
 
-                    {/* Liquid Frosted Zomato Link */}
+                    {/* Zomato Link */}
                     <motion.a
                       className="menu-action-zomato"
                       href="https://www.zomato.com"
@@ -792,8 +790,7 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
                         textDecoration: "none",
                         padding: "10px 18px",
                         borderRadius: "100px",
-                        background: "rgba(255, 241, 242, 0.8)",
-                        backdropFilter: "blur(16px)",
+                        background: "#FFF1F2",
                         border: "1.5px solid rgba(226, 55, 68, 0.35)",
                         boxShadow: "0 4px 14px rgba(226, 55, 68, 0.12)",
                       }}
@@ -819,9 +816,7 @@ function MenuSection({ onAddToTray }: MenuSectionProps) {
           transition={{ duration: 0.6 }}
           style={{
             marginTop: "60px",
-            background: "rgba(255, 255, 255, 0.85)",
-            backdropFilter: "blur(28px) saturate(210%)",
-            WebkitBackdropFilter: "blur(28px) saturate(210%)",
+            background: "linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.90) 100%)",
             border: "1.5px solid rgba(255, 255, 255, 0.95)",
             borderRadius: "24px",
             padding: "18px 28px",

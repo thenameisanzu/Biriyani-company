@@ -51,6 +51,8 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
   // 4. Menu cards stack over the blurred live video.
   useEffect(() => {
     let ticking = false;
+    let lastRawExpand = -1;
+    let lastBlurT = -1;
 
     const updateFrame = () => {
       if (!containerRef.current || !videoWrapperRef.current || !videoRef.current) {
@@ -66,26 +68,29 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
       const enterThreshold = windowH * 0.75;
       const rawExpand = Math.min(Math.max(enterDistance / enterThreshold, 0), 1);
 
-      const screenW = window.innerWidth;
-      const initialSize =
-        screenW < 768
-          ? "min(86vw, 360px)"
-          : screenW < 1024
-          ? "min(68vw, 460px)"
-          : "min(50vw, 520px)";
+      if (Math.abs(rawExpand - lastRawExpand) > 0.005) {
+        lastRawExpand = rawExpand;
+        const screenW = window.innerWidth;
+        const initialSize =
+          screenW < 768
+            ? "min(86vw, 360px)"
+            : screenW < 1024
+            ? "min(68vw, 460px)"
+            : "min(50vw, 520px)";
 
-      const wrapper = videoWrapperRef.current;
-      if (rawExpand >= 0.98) {
-        wrapper.style.width = "100%";
-        wrapper.style.height = "100vh";
-        wrapper.style.borderRadius = "0px";
-        wrapper.style.boxShadow = "none";
-      } else {
-        wrapper.style.width = `calc(${initialSize} + (100vw - ${initialSize}) * ${rawExpand})`;
-        wrapper.style.height = `calc(${initialSize} + (100vh - ${initialSize}) * ${rawExpand})`;
-        wrapper.style.borderRadius = `${(1 - rawExpand) * 44}px`;
-        wrapper.style.boxShadow =
-          "0 30px 80px rgba(0, 0, 0, 0.18), 0 10px 35px rgba(255, 85, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)";
+        const wrapper = videoWrapperRef.current;
+        if (rawExpand >= 0.98) {
+          wrapper.style.width = "100%";
+          wrapper.style.height = "100vh";
+          wrapper.style.borderRadius = "0px";
+          wrapper.style.boxShadow = "none";
+        } else {
+          wrapper.style.width = `calc(${initialSize} + (100vw - ${initialSize}) * ${rawExpand})`;
+          wrapper.style.height = `calc(${initialSize} + (100vh - ${initialSize}) * ${rawExpand})`;
+          wrapper.style.borderRadius = `${(1 - rawExpand) * 44}px`;
+          wrapper.style.boxShadow =
+            "0 30px 80px rgba(0, 0, 0, 0.18), 0 10px 35px rgba(255, 85, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05)";
+        }
       }
 
       // 2. Dynamic Blur as user scrolls towards Menu:
@@ -98,28 +103,31 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
         blurT = Math.min(Math.max((scrolledPast - blurStart) / (blurEnd - blurStart), 0), 1);
       }
 
-      const video = videoRef.current;
-      const blurPx = blurT * 22;
-      const brightness = 1 - blurT * 0.22;
-      const saturate = 135 + blurT * 20;
-      const scale = 1.02 + blurT * 0.06;
+      if (Math.abs(blurT - lastBlurT) > 0.005) {
+        lastBlurT = blurT;
+        const video = videoRef.current;
+        const blurPx = blurT * 22;
+        const brightness = 1 - blurT * 0.22;
+        const saturate = 135 + blurT * 20;
+        const scale = 1.02 + blurT * 0.06;
 
-      video.style.filter = `blur(${blurPx.toFixed(1)}px) brightness(${brightness.toFixed(2)}) saturate(${saturate.toFixed(0)}%)`;
-      video.style.transform = `scale(${scale.toFixed(3)})`;
+        video.style.filter = `blur(${blurPx.toFixed(1)}px) brightness(${brightness.toFixed(2)}) saturate(${saturate.toFixed(0)}%)`;
+        video.style.transform = `scale(${scale.toFixed(3)})`;
 
-      if (blurVeilRef.current) {
-        blurVeilRef.current.style.opacity = blurT.toFixed(2);
-      }
+        if (blurVeilRef.current) {
+          blurVeilRef.current.style.opacity = blurT.toFixed(2);
+        }
 
-      if (heroOverlayRef.current) {
-        const overlayOpacity = Math.max(1 - blurT * 1.5, 0);
-        heroOverlayRef.current.style.opacity = overlayOpacity.toFixed(2);
-        heroOverlayRef.current.style.transform = `translateY(${(-blurT * 35).toFixed(1)}px)`;
-        heroOverlayRef.current.style.pointerEvents = overlayOpacity < 0.1 ? "none" : "auto";
-      }
+        if (heroOverlayRef.current) {
+          const overlayOpacity = Math.max(1 - blurT * 1.5, 0);
+          heroOverlayRef.current.style.opacity = overlayOpacity.toFixed(2);
+          heroOverlayRef.current.style.transform = `translateY(${(-blurT * 35).toFixed(1)}px)`;
+          heroOverlayRef.current.style.pointerEvents = overlayOpacity < 0.1 ? "none" : "auto";
+        }
 
-      if (floatingBtnRef.current) {
-        floatingBtnRef.current.style.display = blurT >= 0.7 ? "flex" : "none";
+        if (floatingBtnRef.current) {
+          floatingBtnRef.current.style.display = blurT >= 0.7 ? "flex" : "none";
+        }
       }
 
       ticking = false;

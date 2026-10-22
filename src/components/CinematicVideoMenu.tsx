@@ -1,15 +1,10 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import {
-  Volume2,
-  VolumeX,
-  RotateCcw,
   Sparkles,
   ChevronDown,
-  UtensilsCrossed,
   Eye,
-  ArrowRight,
 } from "lucide-react";
 import MenuSection from "./MenuSection";
 import { MenuItemType } from "./FoodDetailModal";
@@ -25,34 +20,6 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
   const heroOverlayRef = useRef<HTMLDivElement>(null);
   const blurVeilRef = useRef<HTMLDivElement>(null);
   const floatingBtnRef = useRef<HTMLDivElement>(null);
-
-  const [isMuted, setIsMuted] = useState(true);
-
-  // Toggle Sound
-  const toggleSound = () => {
-    if (!videoRef.current) return;
-    const nextMuted = !isMuted;
-    videoRef.current.muted = nextMuted;
-    setIsMuted(nextMuted);
-    if (!nextMuted && videoRef.current.paused) {
-      videoRef.current.play().catch(() => {});
-    }
-  };
-
-  // Replay Video from start
-  const restartVideo = () => {
-    if (!videoRef.current) return;
-    videoRef.current.currentTime = 0;
-    videoRef.current.play().catch(() => {});
-  };
-
-  // Smooth scroll jumps
-  const scrollToMenu = () => {
-    const menuEl = document.getElementById("menu");
-    if (menuEl) {
-      menuEl.scrollIntoView({ behavior: "smooth" });
-    }
-  };
 
   const scrollToVideo = () => {
     if (containerRef.current) {
@@ -72,7 +39,6 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
     if (playPromise !== undefined) {
       playPromise.catch(() => {
         video.muted = true;
-        setIsMuted(true);
         video.play().catch(() => {});
       });
     }
@@ -224,7 +190,7 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
             src="/video/Create_slow_motion_motion_video_20261020132803.mp4"
             autoPlay
             loop
-            muted={isMuted}
+            muted
             playsInline
             preload="auto"
             style={{
@@ -295,153 +261,7 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
             willChange: "opacity, transform",
           }}
         >
-          {/* Top Bar: Process Badge + Audio & Replay Controls */}
-          <div
-            className="cinema-top-row"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              flexWrap: "wrap",
-              gap: "16px",
-            }}
-          >
-            {/* Live Process Pill */}
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "10px",
-                padding: "8px 18px",
-                borderRadius: "100px",
-                background: "rgba(22, 19, 19, 0.65)",
-                backdropFilter: "blur(24px) saturate(200%)",
-                WebkitBackdropFilter: "blur(24px) saturate(200%)",
-                border: "1.5px solid rgba(255, 117, 23, 0.45)",
-                boxShadow: "0 10px 25px rgba(0, 0, 0, 0.35)",
-              }}
-            >
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "8px",
-                  height: "8px",
-                  borderRadius: "50%",
-                  background: "#FF5500",
-                  boxShadow: "0 0 12px #FF5500",
-                  animation: "pulseSaffronGlow 2s infinite ease-in-out",
-                }}
-              />
-              <span
-                style={{
-                  fontSize: "0.78rem",
-                  fontWeight: 900,
-                  letterSpacing: "0.16em",
-                  color: "#FFFFFF",
-                  fontFamily: "var(--font-display)",
-                  textTransform: "uppercase",
-                }}
-              >
-                SLOW-MOTION DUM • HARDWOOD COAL
-              </span>
-            </div>
-
-            {/* Right: Sound & Replay Controls */}
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "6px 8px",
-                borderRadius: "100px",
-                background: "rgba(22, 19, 19, 0.72)",
-                backdropFilter: "blur(28px) saturate(210%)",
-                WebkitBackdropFilter: "blur(28px) saturate(210%)",
-                border: "1.5px solid rgba(255, 255, 255, 0.18)",
-                boxShadow: "0 14px 35px rgba(0, 0, 0, 0.4)",
-              }}
-            >
-              {/* Sound Toggle */}
-              <button
-                onClick={toggleSound}
-                aria-label={isMuted ? "Unmute sound" : "Mute sound"}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  background: isMuted ? "rgba(255, 255, 255, 0.1)" : "#FF5500",
-                  color: "#FFFFFF",
-                  padding: "8px 14px",
-                  borderRadius: "100px",
-                  fontSize: "0.74rem",
-                  fontWeight: 900,
-                  letterSpacing: "0.08em",
-                  border: "none",
-                  cursor: "pointer",
-                  transition: "all 0.25s ease",
-                  fontFamily: "var(--font-display)",
-                }}
-              >
-                {!isMuted ? (
-                  <>
-                    <Volume2 size={16} />
-                    <span style={{ display: "inline-flex", gap: "2px", alignItems: "center", height: "12px" }}>
-                      <span
-                        style={{
-                          width: "2px",
-                          height: "60%",
-                          background: "#FFFFFF",
-                          animation: "equalizerBar 0.8s infinite ease-in-out",
-                        }}
-                      />
-                      <span
-                        style={{
-                          width: "2px",
-                          height: "100%",
-                          background: "#FFFFFF",
-                          animation: "equalizerBar 0.6s infinite 0.2s ease-in-out",
-                        }}
-                      />
-                      <span
-                        style={{
-                          width: "2px",
-                          height: "40%",
-                          background: "#FFFFFF",
-                          animation: "equalizerBar 0.9s infinite 0.4s ease-in-out",
-                        }}
-                      />
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <VolumeX size={16} />
-                    <span>TAP FOR SOUND</span>
-                  </>
-                )}
-              </button>
-
-              {/* Replay */}
-              <button
-                onClick={restartVideo}
-                aria-label="Restart video"
-                style={{
-                  width: "36px",
-                  height: "36px",
-                  borderRadius: "50%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background: "rgba(255, 255, 255, 0.08)",
-                  color: "#FFFFFF",
-                  border: "1px solid rgba(255, 255, 255, 0.08)",
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                }}
-              >
-                <RotateCcw size={14} />
-              </button>
-            </div>
-          </div>
+          {/* Top Bar removed per user request */}
 
           {/* Center Editorial Typography */}
           <div className="cinema-text-wrapper" style={{ maxWidth: "880px", margin: "auto 0 20px" }}>
@@ -478,7 +298,15 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
               }}
             >
               SLOW FIRE. <br />
-              <span className="saffron-gradient-text">PURE AROMA.</span>
+              <span
+                style={{
+                  color: "#FF7517",
+                  textShadow: "0 4px 25px rgba(255, 117, 23, 0.5), 0 8px 30px rgba(0, 0, 0, 0.85)",
+                  display: "inline-block",
+                }}
+              >
+                PURE AROMA.
+              </span>
             </h2>
 
             <p
@@ -524,39 +352,6 @@ export default function CinematicVideoMenu({ onAddToTray }: CinematicVideoMenuPr
                 Scroll down for menu
               </span>
             </div>
-
-            {/* Jump to Menu Button */}
-            <button
-              onClick={scrollToMenu}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "10px",
-                padding: "12px 26px",
-                borderRadius: "100px",
-                background: "linear-gradient(135deg, #FF5500 0%, #D44400 100%)",
-                boxShadow: "0 10px 30px rgba(255, 85, 0, 0.45)",
-                border: "1.5px solid rgba(255, 255, 255, 0.35)",
-                color: "#FFFFFF",
-                fontSize: "0.85rem",
-                fontWeight: 900,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                fontFamily: "var(--font-display)",
-                cursor: "pointer",
-                transition: "all 0.25s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "scale(1.04)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "scale(1)";
-              }}
-            >
-              <UtensilsCrossed size={16} />
-              <span>EXPLORE GLASS MENU</span>
-              <ArrowRight size={16} />
-            </button>
           </div>
         </div>
 

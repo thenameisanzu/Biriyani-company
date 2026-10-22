@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Copy, Check, Star, ShieldCheck, Flame, Sparkles } from "lucide-react";
+import { ArrowUpRight, Copy, Check, ShieldCheck, Flame, Sparkles } from "lucide-react";
 import { WhatsAppIcon } from "./QuickOrderDrawer";
 
 export default function DeliverySection() {
@@ -172,7 +172,7 @@ export default function DeliverySection() {
           </div>
         </div>
 
-        {/* Dual Awwwards-Tier Delivery Cards: Swiggy & Zomato in Liquid Glass */}
+        {/* Dual Awwwards-Tier Delivery Cards: Swiggy & Zomato Liquid Glass Cards */}
         <div
           style={{
             display: "grid",
@@ -182,357 +182,438 @@ export default function DeliverySection() {
           }}
           className="cards-duo-grid"
         >
-          {/* Swiggy High-Fashion Liquid Glass Card */}
+          {/* Swiggy Liquid Glass Card */}
           <motion.div
             className="delivery-brand-card"
             initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            whileHover={{ y: -8 }}
+            whileHover={{ y: -8, scale: 1.012 }}
             style={{
-              background: "rgba(255, 255, 255, 0.78)",
-              backdropFilter: "blur(32px) saturate(200%)",
-              WebkitBackdropFilter: "blur(32px) saturate(200%)",
+              position: "relative",
               borderRadius: "36px",
-              padding: "48px 44px",
-              border: "1.5px solid rgba(255, 255, 255, 0.95)",
-              boxShadow: "0 25px 60px rgba(252, 128, 25, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.95), 0 0 0 1px rgba(252, 128, 25, 0.18)",
+              minHeight: "360px",
+              padding: "36px 36px 32px 36px",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              position: "relative",
               overflow: "hidden",
+              border: "1.5px solid rgba(255, 255, 255, 0.65)",
+              boxShadow:
+                "0 32px 70px -15px rgba(255, 82, 0, 0.42), inset 0 2px 3px rgba(255, 255, 255, 0.85), inset 0 -2px 4px rgba(0, 0, 0, 0.22)",
+              background: "#FF5200",
+              cursor: "pointer",
             }}
           >
-            {/* Top Row: Branded Mark & Status */}
-            <div>
+            {/* Background Layer: Ambient Glow + User Swiggy Artwork */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                pointerEvents: "none",
+                zIndex: 0,
+              }}
+            >
+              {/* Radial Ambient Glows for depth */}
               <div
                 style={{
+                  position: "absolute",
+                  top: "-25%",
+                  right: "-20%",
+                  width: "360px",
+                  height: "360px",
+                  borderRadius: "50%",
+                  background: "radial-gradient(circle, rgba(255, 175, 70, 0.6) 0%, rgba(255, 82, 0, 0) 70%)",
+                  filter: "blur(35px)",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "-20%",
+                  left: "-15%",
+                  width: "300px",
+                  height: "300px",
+                  borderRadius: "50%",
+                  background: "radial-gradient(circle, rgba(215, 50, 0, 0.5) 0%, rgba(255, 82, 0, 0) 70%)",
+                  filter: "blur(30px)",
+                }}
+              />
+
+              {/* Centered Brand Artwork Image from User */}
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
                   display: "flex",
-                  justifyContent: "space-between",
                   alignItems: "center",
-                  marginBottom: "36px",
+                  justifyContent: "center",
+                  paddingBottom: "52px",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <div
-                    style={{
-                      height: "44px",
-                      borderRadius: "12px",
-                      overflow: "hidden",
-                      display: "flex",
-                      alignItems: "center",
-                      boxShadow: "0 6px 18px rgba(252, 128, 25, 0.28)",
-                      background: "#FC8019",
-                    }}
-                  >
-                    <img
-                      src="/images/swiggy-logo.png"
-                      alt="Swiggy Official Delivery Partner"
-                      style={{
-                        height: "100%",
-                        width: "auto",
-                        objectFit: "contain",
-                        display: "block",
-                      }}
-                    />
-                  </div>
-                  <span
-                    style={{
-                      fontSize: "0.72rem",
-                      fontWeight: 900,
-                      background: "#FFF4ED",
-                      color: "#FC8019",
-                      padding: "5px 12px",
-                      borderRadius: "100px",
-                      letterSpacing: "0.08em",
-                    }}
-                  >
-                    OFFICIAL PARTNER
-                  </span>
-                </div>
-
-                <div
+                <img
+                  src="/images/swiggy-white.png"
+                  alt="Swiggy"
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    fontSize: "0.78rem",
-                    fontWeight: 800,
-                    color: "#27AE60",
-                    background: "rgba(39, 174, 96, 0.1)",
-                    padding: "5px 12px",
-                    borderRadius: "100px",
+                    width: "65%",
+                    maxWidth: "290px",
+                    height: "auto",
+                    objectFit: "contain",
+                    filter: "drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15))",
+                    display: "block",
                   }}
-                >
-                  <span
-                    style={{
-                      width: "6px",
-                      height: "6px",
-                      borderRadius: "50%",
-                      background: "#27AE60",
-                    }}
-                  />
-                  <span>ACCEPTING ORDERS</span>
-                </div>
+                />
               </div>
 
-              {/* Giant Metric Display */}
-              <div style={{ marginBottom: "28px" }}>
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "clamp(3.8rem, 7vw, 5.2rem)",
-                    fontWeight: 950,
-                    lineHeight: 0.9,
-                    color: "#2C2727",
-                    letterSpacing: "-0.04em",
-                  }}
-                >
-                  28 MINS
-                </div>
-                <div
-                  style={{
-                    fontSize: "0.95rem",
-                    fontWeight: 700,
-                    color: "#7E7676",
-                    marginTop: "8px",
-                  }}
-                >
-                  Average doorstep delivery time • Hot insulation fleet
-                </div>
-              </div>
+              {/* Liquid Glass Overlay - Multi-layered Specular Sheen */}
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "linear-gradient(135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.08) 42%, rgba(0, 0, 0, 0.12) 100%)",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: "45%",
+                  background:
+                    "linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0) 100%)",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: "-40%",
+                  left: "-30%",
+                  width: "160%",
+                  height: "120%",
+                  background:
+                    "radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 60%)",
+                  transform: "rotate(-12deg)",
+                }}
+              />
+            </div>
 
-              {/* Rating Pill */}
+            {/* Top Bar: Clean Liquid Glass Capsule */}
+            <div
+              style={{
+                position: "relative",
+                zIndex: 2,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <div
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "8px",
-                  background: "#FAF8F5",
-                  padding: "10px 18px",
+                  background: "rgba(255, 255, 255, 0.22)",
+                  backdropFilter: "blur(16px) saturate(180%)",
+                  WebkitBackdropFilter: "blur(16px) saturate(180%)",
+                  border: "1px solid rgba(255, 255, 255, 0.42)",
+                  padding: "6px 14px",
                   borderRadius: "100px",
-                  fontSize: "0.9rem",
+                  color: "#FFFFFF",
+                  fontSize: "0.76rem",
                   fontWeight: 800,
-                  color: "#2C2727",
-                  marginBottom: "36px",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  boxShadow: "0 4px 14px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.5)",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "3px", color: "#FC8019" }}>
-                  <Star size={16} fill="#FC8019" />
-                  <span>4.8</span>
-                </div>
-                <span style={{ color: "#D1CBC7" }}>|</span>
-                <span style={{ color: "#595353" }}>12,400+ Verified Foodie Reviews</span>
+                <span
+                  style={{
+                    width: "7px",
+                    height: "7px",
+                    borderRadius: "50%",
+                    background: "#FFFFFF",
+                    boxShadow: "0 0 8px #FFFFFF",
+                  }}
+                />
+                <span>ORDER ONLINE</span>
               </div>
             </div>
 
-            {/* Launch Action */}
-            <a
-              href="https://www.swiggy.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="delivery-action-btn"
-              style={{
-                width: "100%",
-                padding: "20px 32px",
-                borderRadius: "100px",
-                background: "#FC8019",
-                color: "#FFFFFF",
-                fontWeight: 950,
-                fontSize: "1rem",
-                fontFamily: "var(--font-display)",
-                letterSpacing: "0.05em",
-                textTransform: "uppercase",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                boxShadow: "0 12px 30px rgba(252, 128, 25, 0.35)",
-                transition: "all 0.25s ease",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-2px)")}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
-            >
-              <span>Launch Swiggy Store</span>
-              <ArrowUpRight size={20} />
-            </a>
+            {/* Bottom Row: Liquid Glass CTA Button */}
+            <div style={{ position: "relative", zIndex: 2 }}>
+              <a
+                href="https://www.swiggy.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="delivery-action-glass-btn"
+                style={{
+                  width: "100%",
+                  padding: "18px 28px",
+                  borderRadius: "100px",
+                  background: "rgba(255, 255, 255, 0.94)",
+                  backdropFilter: "blur(24px) saturate(200%)",
+                  WebkitBackdropFilter: "blur(24px) saturate(200%)",
+                  color: "#2C2727",
+                  fontWeight: 950,
+                  fontSize: "0.98rem",
+                  fontFamily: "var(--font-display)",
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  border: "1.5px solid rgba(255, 255, 255, 0.98)",
+                  boxShadow: "0 12px 30px rgba(0, 0, 0, 0.2), inset 0 1.5px 2px #FFFFFF",
+                  textDecoration: "none",
+                  transition: "all 0.28s cubic-bezier(0.16, 1, 0.3, 1)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-3px)";
+                  e.currentTarget.style.boxShadow = "0 18px 36px rgba(0, 0, 0, 0.28), inset 0 1.5px 2px #FFFFFF";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 12px 30px rgba(0, 0, 0, 0.2), inset 0 1.5px 2px #FFFFFF";
+                }}
+              >
+                <span>ORDER ON SWIGGY</span>
+                <div
+                  style={{
+                    width: "36px",
+                    height: "36px",
+                    borderRadius: "50%",
+                    background: "#FF5200",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#FFFFFF",
+                    boxShadow: "0 4px 12px rgba(255, 82, 0, 0.4)",
+                  }}
+                >
+                  <ArrowUpRight size={19} strokeWidth={2.6} />
+                </div>
+              </a>
+            </div>
           </motion.div>
 
-          {/* Zomato High-Fashion Liquid Glass Card */}
+          {/* Zomato Liquid Glass Card */}
           <motion.div
             className="delivery-brand-card"
             initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-            whileHover={{ y: -8 }}
+            whileHover={{ y: -8, scale: 1.012 }}
             style={{
-              background: "rgba(255, 255, 255, 0.78)",
-              backdropFilter: "blur(32px) saturate(200%)",
-              WebkitBackdropFilter: "blur(32px) saturate(200%)",
+              position: "relative",
               borderRadius: "36px",
-              padding: "48px 44px",
-              border: "1.5px solid rgba(255, 255, 255, 0.95)",
-              boxShadow: "0 25px 60px rgba(226, 55, 68, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.95), 0 0 0 1px rgba(226, 55, 68, 0.18)",
+              minHeight: "360px",
+              padding: "36px 36px 32px 36px",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              position: "relative",
               overflow: "hidden",
+              border: "1.5px solid rgba(255, 255, 255, 0.65)",
+              boxShadow:
+                "0 32px 70px -15px rgba(226, 55, 68, 0.42), inset 0 2px 3px rgba(255, 255, 255, 0.85), inset 0 -2px 4px rgba(0, 0, 0, 0.22)",
+              background: "#E23744",
+              cursor: "pointer",
             }}
           >
-            {/* Top Row: Branded Mark & Status */}
-            <div>
+            {/* Background Layer: Ambient Glow + Zomato Artwork */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                pointerEvents: "none",
+                zIndex: 0,
+              }}
+            >
+              {/* Radial Ambient Glows for depth */}
               <div
                 style={{
+                  position: "absolute",
+                  top: "-25%",
+                  right: "-20%",
+                  width: "360px",
+                  height: "360px",
+                  borderRadius: "50%",
+                  background: "radial-gradient(circle, rgba(255, 95, 115, 0.6) 0%, rgba(226, 55, 68, 0) 70%)",
+                  filter: "blur(35px)",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "-20%",
+                  left: "-15%",
+                  width: "300px",
+                  height: "300px",
+                  borderRadius: "50%",
+                  background: "radial-gradient(circle, rgba(160, 20, 35, 0.5) 0%, rgba(226, 55, 68, 0) 70%)",
+                  filter: "blur(30px)",
+                }}
+              />
+
+              {/* Centered Brand Artwork Image */}
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
                   display: "flex",
-                  justifyContent: "space-between",
                   alignItems: "center",
-                  marginBottom: "36px",
+                  justifyContent: "center",
+                  paddingBottom: "52px",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <div
-                    style={{
-                      height: "44px",
-                      borderRadius: "12px",
-                      overflow: "hidden",
-                      display: "flex",
-                      alignItems: "center",
-                      boxShadow: "0 6px 18px rgba(226, 55, 68, 0.28)",
-                      background: "#E23744",
-                    }}
-                  >
-                    <img
-                      src="/images/zomato-logo.svg"
-                      alt="Zomato Gold Delivery Partner"
-                      style={{
-                        height: "100%",
-                        width: "auto",
-                        objectFit: "contain",
-                        display: "block",
-                      }}
-                    />
-                  </div>
-                  <span
-                    style={{
-                      fontSize: "0.72rem",
-                      fontWeight: 900,
-                      background: "#FFF0F1",
-                      color: "#E23744",
-                      padding: "5px 12px",
-                      borderRadius: "100px",
-                      letterSpacing: "0.08em",
-                    }}
-                  >
-                    GOLD PARTNER
-                  </span>
-                </div>
-
-                <div
+                <img
+                  src="/images/zomato-white.svg"
+                  alt="Zomato"
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    fontSize: "0.78rem",
-                    fontWeight: 800,
-                    color: "#27AE60",
-                    background: "rgba(39, 174, 96, 0.1)",
-                    padding: "5px 12px",
-                    borderRadius: "100px",
+                    width: "65%",
+                    maxWidth: "290px",
+                    height: "auto",
+                    objectFit: "contain",
+                    filter: "drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15))",
+                    display: "block",
                   }}
-                >
-                  <span
-                    style={{
-                      width: "6px",
-                      height: "6px",
-                      borderRadius: "50%",
-                      background: "#27AE60",
-                    }}
-                  />
-                  <span>ACCEPTING ORDERS</span>
-                </div>
+                />
               </div>
 
-              {/* Giant Metric Display */}
-              <div style={{ marginBottom: "28px" }}>
-                <div
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "clamp(3.8rem, 7vw, 5.2rem)",
-                    fontWeight: 950,
-                    lineHeight: 0.9,
-                    color: "#2C2727",
-                    letterSpacing: "-0.04em",
-                  }}
-                >
-                  4.9 RATING
-                </div>
-                <div
-                  style={{
-                    fontSize: "0.95rem",
-                    fontWeight: 700,
-                    color: "#7E7676",
-                    marginTop: "8px",
-                  }}
-                >
-                  Top 1% rated biryani house • 18,500+ customer reviews
-                </div>
-              </div>
+              {/* Liquid Glass Overlay - Multi-layered Specular Sheen */}
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "linear-gradient(135deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.08) 42%, rgba(0, 0, 0, 0.12) 100%)",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: "45%",
+                  background:
+                    "linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0) 100%)",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: "-40%",
+                  left: "-30%",
+                  width: "160%",
+                  height: "120%",
+                  background:
+                    "radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 60%)",
+                  transform: "rotate(-12deg)",
+                }}
+              />
+            </div>
 
-              {/* Delivery Stats Pill */}
+            {/* Top Bar: Clean Liquid Glass Capsule */}
+            <div
+              style={{
+                position: "relative",
+                zIndex: 2,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <div
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "8px",
-                  background: "#FAF8F5",
-                  padding: "10px 18px",
+                  background: "rgba(255, 255, 255, 0.22)",
+                  backdropFilter: "blur(16px) saturate(180%)",
+                  WebkitBackdropFilter: "blur(16px) saturate(180%)",
+                  border: "1px solid rgba(255, 255, 255, 0.42)",
+                  padding: "6px 14px",
                   borderRadius: "100px",
-                  fontSize: "0.9rem",
+                  color: "#FFFFFF",
+                  fontSize: "0.76rem",
                   fontWeight: 800,
-                  color: "#2C2727",
-                  marginBottom: "36px",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  boxShadow: "0 4px 14px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.5)",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "3px", color: "#E23744" }}>
-                  <span>⚡ 30 - 35 MINS</span>
-                </div>
-                <span style={{ color: "#D1CBC7" }}>|</span>
-                <span style={{ color: "#595353" }}>Extra Zomato Gold Benefits</span>
+                <span
+                  style={{
+                    width: "7px",
+                    height: "7px",
+                    borderRadius: "50%",
+                    background: "#FFFFFF",
+                    boxShadow: "0 0 8px #FFFFFF",
+                  }}
+                />
+                <span>ORDER ONLINE</span>
               </div>
             </div>
 
-            {/* Launch Action */}
-            <a
-              href="https://www.zomato.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="delivery-action-btn"
-              style={{
-                width: "100%",
-                padding: "20px 32px",
-                borderRadius: "100px",
-                background: "#E23744",
-                color: "#FFFFFF",
-                fontWeight: 950,
-                fontSize: "1rem",
-                fontFamily: "var(--font-display)",
-                letterSpacing: "0.05em",
-                textTransform: "uppercase",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                boxShadow: "0 12px 30px rgba(226, 55, 68, 0.35)",
-                transition: "all 0.25s ease",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-2px)")}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
-            >
-              <span>Launch Zomato Store</span>
-              <ArrowUpRight size={20} />
-            </a>
+            {/* Bottom Row: Liquid Glass CTA Button */}
+            <div style={{ position: "relative", zIndex: 2 }}>
+              <a
+                href="https://www.zomato.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="delivery-action-glass-btn"
+                style={{
+                  width: "100%",
+                  padding: "18px 28px",
+                  borderRadius: "100px",
+                  background: "rgba(255, 255, 255, 0.94)",
+                  backdropFilter: "blur(24px) saturate(200%)",
+                  WebkitBackdropFilter: "blur(24px) saturate(200%)",
+                  color: "#2C2727",
+                  fontWeight: 950,
+                  fontSize: "0.98rem",
+                  fontFamily: "var(--font-display)",
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  border: "1.5px solid rgba(255, 255, 255, 0.98)",
+                  boxShadow: "0 12px 30px rgba(0, 0, 0, 0.2), inset 0 1.5px 2px #FFFFFF",
+                  textDecoration: "none",
+                  transition: "all 0.28s cubic-bezier(0.16, 1, 0.3, 1)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-3px)";
+                  e.currentTarget.style.boxShadow = "0 18px 36px rgba(0, 0, 0, 0.28), inset 0 1.5px 2px #FFFFFF";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 12px 30px rgba(0, 0, 0, 0.2), inset 0 1.5px 2px #FFFFFF";
+                }}
+              >
+                <span>ORDER ON ZOMATO</span>
+                <div
+                  style={{
+                    width: "36px",
+                    height: "36px",
+                    borderRadius: "50%",
+                    background: "#E23744",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#FFFFFF",
+                    boxShadow: "0 4px 12px rgba(226, 55, 68, 0.4)",
+                  }}
+                >
+                  <ArrowUpRight size={19} strokeWidth={2.6} />
+                </div>
+              </a>
+            </div>
           </motion.div>
         </div>
 

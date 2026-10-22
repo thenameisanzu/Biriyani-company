@@ -277,41 +277,43 @@ export default function HeroSection() {
               }}
             >
               {/* Biryani Bowl Image directly on background */}
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: "50%",
-                  overflow: "visible",
-                }}
-              >
-                <Image
-                  src="/images/hero-bowl-biryani.jpg"
-                  alt="Hot Steaming Bowl of Dum Biryani - the Biryani Co."
-                  fill
+                <div
                   style={{
-                    objectFit: "cover",
+                    position: "relative",
+                    width: "100%",
+                    height: "100%",
                     borderRadius: "50%",
+                    overflow: "hidden",
                     boxShadow: "0 35px 80px rgba(0, 0, 0, 0.32)",
+                    maskImage: "radial-gradient(circle at center, black 72%, transparent 99%)",
+                    WebkitMaskImage: "radial-gradient(circle at center, black 72%, transparent 99%)",
                   }}
-                  priority
-                />
+                >
+                  <Image
+                    src="/images/hero-bowl-biryani.jpg"
+                    alt="Hot Steaming Bowl of Dum Biryani - the Biryani Co."
+                    fill
+                    style={{
+                      objectFit: "cover",
+                    }}
+                    priority
+                  />
+                </div>
 
-                {/* HEAVILY ANIMATED BILLOWING STEAM WAFTING FROM THE BOWL */}
+                {/* Delicate, realistic hot steam wafting gently from the bowl */}
                 <div
                   style={{
                     position: "absolute",
-                    top: "-35%",
-                    left: "-10%",
-                    right: "-10%",
-                    height: "140%",
+                    top: "-60%",
+                    left: "-25%",
+                    right: "-25%",
+                    height: "170%",
                     pointerEvents: "none",
+                    zIndex: 16,
                   }}
                 >
                   <SteamCanvas />
                 </div>
-              </div>
 
               {/* Floating Liquid Glass Badges Around Bowl */}
               <motion.div

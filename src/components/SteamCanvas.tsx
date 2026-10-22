@@ -45,41 +45,41 @@ export default function SteamCanvas({ className = "" }: { className?: string }) 
 
     let isVisible = true;
     const puffs: SteamPuff[] = [];
-    const maxPuffs = 45; // Optimized from 95 to prevent CPU frame drops
+    const maxPuffs = 14; // Subtle, realistic hot steam wisps
 
-    // Hot emitters along the rim of the biryani handi pot
+    // Gentle emitters focused directly over the hot dum rice
     const spawnPuff = (): SteamPuff => {
-      const isSparkle = Math.random() < 0.16;
-      // Emit from the center-lower zone of the pot where rice is steaming hot
-      const emitterOffset = (Math.random() - 0.5) * (w * 0.55);
+      const isSparkle = Math.random() < 0.08;
+      // Emit tightly from the center handi bowl zone
+      const emitterOffset = (Math.random() - 0.5) * (w * 0.32);
       const startX = w * 0.5 + emitterOffset;
-      const startY = h * 0.70 + (Math.random() - 0.5) * 30;
+      const startY = h * 0.62 + (Math.random() - 0.5) * 16;
 
       const maxLife = isSparkle
-        ? 140 + Math.random() * 80
-        : 180 + Math.random() * 120;
+        ? 180 + Math.random() * 80
+        : 220 + Math.random() * 140;
 
       return {
         x: startX,
         y: startY,
         initialX: startX,
-        radius: isSparkle ? Math.random() * 2 + 1.2 : Math.random() * 18 + 14,
-        maxRadius: isSparkle ? 3 : Math.random() * 75 + 55,
-        vy: isSparkle ? Math.random() * 1.6 + 0.8 : Math.random() * 1.35 + 0.75,
-        vx: (Math.random() - 0.5) * 0.5,
+        radius: isSparkle ? Math.random() * 1.5 + 1 : Math.random() * 8 + 8,
+        maxRadius: isSparkle ? 2.5 : Math.random() * 32 + 24,
+        vy: isSparkle ? Math.random() * 0.4 + 0.3 : Math.random() * 0.38 + 0.28, // Gentle, slow lazy waft
+        vx: (Math.random() - 0.5) * 0.2,
         opacity: 0,
-        maxOpacity: isSparkle ? 0.85 : Math.random() * 0.42 + 0.28,
+        maxOpacity: isSparkle ? 0.45 : Math.random() * 0.13 + 0.08, // Translucent, soft, natural steam
         life: 0,
         maxLife,
         rotation: Math.random() * Math.PI * 2,
-        rotSpeed: (Math.random() - 0.5) * 0.025,
-        swaySpeed: Math.random() * 0.03 + 0.015,
-        swayDist: Math.random() * 24 + 10,
+        rotSpeed: (Math.random() - 0.5) * 0.012,
+        swaySpeed: Math.random() * 0.015 + 0.008,
+        swayDist: Math.random() * 12 + 6,
         type: isSparkle ? "saffronSparkle" : "steam",
       };
     };
 
-    // Pre-populate so steam is visible instantly on load
+    // Pre-populate so gentle steam is visible immediately
     for (let i = 0; i < maxPuffs; i++) {
       const p = spawnPuff();
       p.life = Math.random() * p.maxLife;
@@ -93,7 +93,7 @@ export default function SteamCanvas({ className = "" }: { className?: string }) 
       frame++;
       ctx.clearRect(0, 0, w, h);
 
-      // Continuously spawn fresh rising plumes
+      // Continuously maintain gentle rising plumes
       if (puffs.length < maxPuffs) {
         puffs.push(spawnPuff());
       }
@@ -105,22 +105,26 @@ export default function SteamCanvas({ className = "" }: { className?: string }) 
         // Progress fraction (0 to 1)
         const progress = p.life / p.maxLife;
 
-        // Curve opacity: fade in rapidly, linger warmly, disperse smoothly
-        if (progress < 0.22) {
-          p.opacity = (progress / 0.22) * p.maxOpacity;
+        // Curve opacity: gentle fade-in, smooth dissipation
+        if (progress < 0.25) {
+          p.opacity = (progress / 0.25) * p.maxOpacity;
         } else {
-          p.opacity = (1 - (progress - 0.22) / 0.78) * p.maxOpacity;
+          p.opacity = (1 - (progress - 0.25) / 0.75) * p.maxOpacity;
         }
 
-        // Float upwards with organic swirling turbulence
+        // Float upwards with gentle, calming air drift
         p.y -= p.vy;
-        p.x = p.initialX + Math.sin(frame * p.swaySpeed + p.life * 0.03) * p.swayDist + p.vx * p.life;
+        p.x = p.initialX + Math.sin(frame * p.swaySpeed + p.life * 0.02) * p.swayDist + p.vx * p.life;
         p.rotation += p.rotSpeed;
 
-        // Steam puffs expand as they ascend into cooler air
-        const currentRadius = p.radius + (p.maxRadius - p.radius) * Math.pow(progress, 0.7);
+        // Disperse and expand as it rises into cooler air
+        const currentRadius = p.radius + (p.maxRadius - p.radius) * Math.pow(progress, 0.75);
 
-        if (p.life >= p.maxLife || p.y < -currentRadius) {
+        // Smoothly fade out before reaching top canvas boundary so there is never an edge artifact
+        const topFade = Math.min(1, Math.max(0, (p.y - h * 0.12) / (h * 0.25)));
+        const finalOpacity = p.opacity * topFade;
+
+        if (p.life >= p.maxLife || p.y < -currentRadius || finalOpacity <= 0.001) {
           puffs.splice(i, 1);
           continue;
         }
@@ -130,24 +134,23 @@ export default function SteamCanvas({ className = "" }: { className?: string }) 
         ctx.rotate(p.rotation);
 
         if (p.type === "saffronSparkle") {
-          // Floating saffron & warm ember sparkles
+          // Delicate floating saffron fleck
           ctx.beginPath();
           ctx.arc(0, 0, p.radius, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 117, 23, ${p.opacity * 1.5})`;
-          ctx.shadowColor = "#FF7517";
-          ctx.shadowBlur = 8;
+          ctx.fillStyle = `rgba(255, 130, 40, ${finalOpacity * 1.2})`;
+          ctx.shadowColor = "#FF8228";
+          ctx.shadowBlur = 6;
           ctx.fill();
         } else {
-          // Voluminous, multi-stop radial gradient steam puff
+          // Delicate, soft, translucent steam puff
           const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, currentRadius);
-          grad.addColorStop(0, `rgba(255, 255, 255, ${p.opacity * 0.95})`);
-          grad.addColorStop(0.35, `rgba(255, 248, 238, ${p.opacity * 0.6})`);
-          grad.addColorStop(0.7, `rgba(255, 240, 225, ${p.opacity * 0.2})`);
+          grad.addColorStop(0, `rgba(255, 255, 255, ${finalOpacity * 0.85})`);
+          grad.addColorStop(0.35, `rgba(255, 248, 238, ${finalOpacity * 0.45})`);
+          grad.addColorStop(0.7, `rgba(255, 242, 230, ${finalOpacity * 0.12})`);
           grad.addColorStop(1, "rgba(255, 255, 255, 0)");
 
           ctx.beginPath();
-          // Slightly distorted oval puff for natural smoke feel
-          ctx.scale(1.15, 0.92);
+          ctx.scale(1.1, 0.94);
           ctx.arc(0, 0, currentRadius, 0, Math.PI * 2);
           ctx.fillStyle = grad;
           ctx.fill();
@@ -189,7 +192,7 @@ export default function SteamCanvas({ className = "" }: { className?: string }) 
         inset: 0,
         pointerEvents: "none",
         zIndex: 15,
-        overflow: "hidden",
+        overflow: "visible",
       }}
     >
       {/* Dynamic HTML5 Canvas Fluid Steam */}
@@ -201,54 +204,6 @@ export default function SteamCanvas({ className = "" }: { className?: string }) 
           left: 0,
           width: "100%",
           height: "100%",
-        }}
-      />
-
-      {/* CSS Multi-layer Billowing Smoke Plumes for Rich Visual Depth */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "22%",
-          left: "22%",
-          width: "180px",
-          height: "220px",
-          borderRadius: "50%",
-          background: "radial-gradient(ellipse at center, rgba(255,255,255,0.7) 0%, rgba(255,248,235,0.3) 50%, transparent 75%)",
-          filter: "blur(28px)",
-          animation: "smokeBillow1 5.2s infinite ease-out",
-          transformOrigin: "bottom center",
-          pointerEvents: "none",
-        }}
-      />
-
-      <div
-        style={{
-          position: "absolute",
-          bottom: "24%",
-          right: "22%",
-          width: "190px",
-          height: "240px",
-          borderRadius: "50%",
-          background: "radial-gradient(ellipse at center, rgba(255,255,255,0.75) 0%, rgba(255,245,230,0.35) 50%, transparent 75%)",
-          filter: "blur(32px)",
-          animation: "smokeBillow2 6s infinite ease-out 1.5s",
-          transformOrigin: "bottom center",
-          pointerEvents: "none",
-        }}
-      />
-
-      <div
-        style={{
-          position: "absolute",
-          bottom: "26%",
-          left: "38%",
-          width: "160px",
-          height: "250px",
-          borderRadius: "50%",
-          background: "radial-gradient(ellipse at center, rgba(255,255,255,0.8) 0%, rgba(255,245,230,0.4) 45%, transparent 75%)",
-          filter: "blur(30px)",
-          animation: "smokeBillow1 4.8s infinite ease-out 2.7s",
-          transformOrigin: "bottom center",
           pointerEvents: "none",
         }}
       />
